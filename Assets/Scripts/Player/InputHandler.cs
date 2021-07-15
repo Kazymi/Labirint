@@ -1,0 +1,22 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InputHandler : MonoBehaviour
+{
+    [SerializeField] private Joystick _playerJoystick;
+    [SerializeField] private bool mobile;
+    
+    public Vector2 MoveDirection()
+    {
+        if (mobile)
+        {
+            return -_playerJoystick.Direction;
+        }
+        else
+        {
+            return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
+    }
+}
