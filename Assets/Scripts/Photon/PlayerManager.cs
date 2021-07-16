@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using System.IO;
-using Zenject;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -18,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (_pv.IsMine)
         {
+            _spawnpoint = ServiceLocator.GetService<SpawnManager>().GetSpawnPoint();
             CreateController();
         }
     }
@@ -32,12 +32,5 @@ public class PlayerManager : MonoBehaviour
     {
         PhotonNetwork.Destroy(_controller);
         CreateController();
-    }
-
-    [Inject]
-    private void Constructor(SpawnManager spawnManager)
-    {
-        Debug.Log("SpawnPoint initialize");
-        _spawnpoint = spawnManager.GetSpawnPoint();
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,9 +10,9 @@ public class Movenment : MonoBehaviour
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private float gravity = 20f;
     [SerializeField] private CharacterController control;
-
-    private InputHandler _inputHandler;
     
+    private PhotonView _photonView;
+    private InputHandler _inputHandler;
     private bool _isGround = false;
     private Vector3 _moveDir = Vector3.zero;
     private float _speedBoost = 0f;

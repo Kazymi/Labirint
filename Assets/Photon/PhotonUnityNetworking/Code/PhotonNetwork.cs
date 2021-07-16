@@ -2544,12 +2544,6 @@ namespace Photon.Pun
 
         private static GameObject NetworkInstantiate(Pun.InstantiateParameters parameters, bool roomObject = false, bool instantiateEvent = false)
         {
-            //Instantiate(name, pos, rot)
-            //pv[] GetPhotonViewsInChildren()
-            //if (event==null) init send-params
-            //Setup of PVs and callback
-            //if (event == null) SendInstantiate(name, pos, rot, etc...)
-
             GameObject go = null;
             PhotonView[] photonViews;
 
