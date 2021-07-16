@@ -43,11 +43,10 @@ public class ChunkGenerator : MonoBehaviour
         }
 
         Chunk newChunk = Instantiate(generateChunks[Random.Range(0, generateChunks.Length)]);
-        var limit = 100;
+        var limit = 2000;
         while (limit-- > 0)
         {
             var position = vacantPlaces.ElementAt(Random.Range(0, vacantPlaces.Count));
-            //newChunk.RotateRandomly();
             if (ConnectToDoor(newChunk, position))
             {
                 newChunk.transform.position =
