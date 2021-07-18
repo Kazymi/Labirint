@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+//TODO: where is service locator 2?
 public static class ServiceLocator
 {
     private static Dictionary<Type, object> services = new Dictionary<Type, object>();
