@@ -560,7 +560,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh62412
+  m_Name: pb_Mesh17372
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -728,6 +728,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1467056636}
   - component: {fileID: 1467056635}
+  - component: {fileID: 1467056637}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -763,6 +764,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467056637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467056634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 057ba43c136aba54792f0a0d9ada5e37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trapConfigurations:
+  - {fileID: 11400000, guid: 6d1d77e099b7c5542be38bf29a124396, type: 2}
+  - {fileID: 11400000, guid: 2447f98697c12e94092310850879e503, type: 2}
+  - {fileID: 11400000, guid: f0e7efe30dfc43147a11ff69a83fbbc4, type: 2}
 --- !u!1 &1566852040
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,7 +900,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-513798
+  m_Name: pb_Mesh-1428
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1225,7 +1242,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.8207547, g: 0.5899498, b: 0.5458793, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1372,10 +1389,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d965674870c44ef46abfeff74c598b8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chunkConfiguration:
+    _traps:
+    - countTraps: 8
+      trapType: 0
+    - countTraps: 4
+      trapType: 1
+    - countTraps: 4
+      trapType: 2
   generateChunks:
   - {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
   mainChunk: {fileID: 6534437693792743272}
-  CountChunk: 75
+  countChunk: 35
 --- !u!114 &6534437693792743272 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
@@ -1402,6 +1427,34 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1909395520}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapUnlocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.data[2].trapType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.data[2].spawnPoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.data[2].spawnPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 8221405118082250325}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.data[2].spawnPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 8221405118082250324}
+    - target: {fileID: 2933725804148726074, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+      propertyPath: trapPositions.Array.data[2].spawnPoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 8221405118082250323}
     - target: {fileID: 6791249708142854830, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -1456,3 +1509,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+--- !u!4 &8221405118082250323 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9181500019868041945, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+  m_PrefabInstance: {fileID: 8221405118082250322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8221405118082250324 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5592716360332576514, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+  m_PrefabInstance: {fileID: 8221405118082250322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8221405118082250325 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 307794320698714471, guid: beff6084faccd2a4a9d382818fe46b3e, type: 3}
+  m_PrefabInstance: {fileID: 8221405118082250322}
+  m_PrefabAsset: {fileID: 0}

@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChunkConfiguration : ScriptableObject
+[Serializable]
+public class ChunkConfiguration
 {
     [SerializeField] private List<Trap> _traps = new List<Trap>();
 

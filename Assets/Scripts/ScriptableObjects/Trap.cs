@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class Trap
 {
-    [SerializeField] private GameObject trapGameObject;
     [SerializeField] private int countTraps;
     [SerializeField] private TrapType trapType;
-
-    public GameObject TrapGameObject => trapGameObject;
-    public int CountTraps => countTraps;
+    
     public TrapType TrapType => trapType;
-
+    
     private int _countSpawnedTrap;
 
     public bool CheckSpawn()
@@ -23,5 +23,15 @@ public class Trap
 
         _countSpawnedTrap++;
         return true;
+    }
+
+    public Transform GetTrapPosition(Chunk chunk)
+    {
+        var trapTransforms = new List<Transform>();
+        foreach (var i in chunk.TrapPositions.Where(t => t.TrapType == trapType))
+        {
+            trapTransforms.Add(i.SpawnPoint[Random.Range(0,i.SpawnPoint.Count)]);
+        }
+        return trapTransforms[Random.Range(0, trapTransforms.Count)];
     }
 }

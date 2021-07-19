@@ -1,33 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ChunkGenerator : MonoBehaviour
 {
-    [SerializeField] private ChunkConfiguration _chunkConfiguration;
+    [SerializeField] private ChunkConfiguration chunkConfiguration;
     [SerializeField] private Chunk[] generateChunks;
     [SerializeField] private Chunk mainChunk;
-    [SerializeField] private int CountChunk;
+    [SerializeField] private int countChunk;
 
     private int _maxX;
     private int _maxY;
+    private TrapManager _trapManager;
     private Chunk[,] _spawnedChunkPositions;
-    private List<Chunk> _spawnedChunk;
+    private List<Chunk> _spawnedChunk = new List<Chunk>();
 
     private IEnumerator Start()
     {
-        _spawnedChunkPositions = new Chunk[CountChunk, CountChunk];
+        _trapManager = ServiceLocator.GetService<TrapManager>();
+        _spawnedChunkPositions = new Chunk[countChunk, countChunk];
         _spawnedChunkPositions[0, 0] = mainChunk;
 
         _maxX = _spawnedChunkPositions.GetLength(0) - 1;
         _maxY = _spawnedChunkPositions.GetLength(1) - 1;
 
-        for (int i = 0; i < CountChunk + 1; i++)
+        for (int i = 0; i < countChunk + 1; i++)
         {
             yield return new WaitForSeconds(0.1f);
-           PlaceSpawnRoom();
+            PlaceSpawnRoom();
         }
+
+        GenerateTrap();
     }
 
     private void GenerateTrap()
@@ -37,14 +43,39 @@ public class ChunkGenerator : MonoBehaviour
         {
             unlockedChunks.Add(chunk);
         }
-        foreach (var trap in _chunkConfiguration._Traps)
+
+        foreach (var trap in chunkConfiguration._Traps)
         {
             while (trap.CheckSpawn())
             {
-                
-            }            
+                while (true)
+                {
+                    var chunk = unlockedChunks[Random.Range(0, unlockedChunks.Count)];
+                    if (chunk.CheckSpawnTrapByType(trap.TrapType) == false)
+                    {
+                        continue;
+                    }
+
+                    Transform spawnTransform;
+                    if (trap.TrapType == TrapType.DoorTrap)
+                    {
+                        var posDoor = chunk.Doors.GetDoorTrapPosition();
+                        if (posDoor == null) continue;
+                        spawnTransform = chunk.Doors.GetDoorTrapPosition();
+                    }
+                    else spawnTransform = trap.GetTrapPosition(chunk);
+
+                    if (spawnTransform.childCount != 0) continue;
+                    var newTrap = _trapManager.GetTrapByType(trap.TrapType);
+                    newTrap.transform.parent = spawnTransform;
+                    newTrap.transform.position = spawnTransform.position;
+                    newTrap.transform.rotation = spawnTransform.rotation;
+                    break;
+                }
+            }
         }
     }
+
     private void PlaceSpawnRoom()
     {
         HashSet<Vector2Int> vacantPlaces = new HashSet<Vector2Int>();
@@ -61,7 +92,7 @@ public class ChunkGenerator : MonoBehaviour
         }
 
         Chunk newChunk = Instantiate(generateChunks[Random.Range(0, generateChunks.Length)]);
-        
+
         var limit = 500;
         while (limit-- > 0)
         {
@@ -70,7 +101,7 @@ public class ChunkGenerator : MonoBehaviour
             newChunk.RotateRandomly();
             if (!ConnectToDoor(newChunk, position)) continue;
             newChunk.transform.position =
-                new Vector3(position.x-5, 0, position.y-5) * 10;
+                new Vector3(position.x - 5, 0, position.y - 5) * 10;
             _spawnedChunkPositions[position.x, position.y] = newChunk;
             _spawnedChunk.Add(newChunk);
             break;

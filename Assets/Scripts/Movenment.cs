@@ -39,7 +39,6 @@ public class Movenment : MonoBehaviour
     {
         if (_isGround)
         {
-            Debug.Log(_inputHandler.MoveDirection().magnitude);
             var direction = _inputHandler.MoveDirection();
             _moveDir = new Vector3(direction.x, 0, direction.y);
             _moveDir = transform.TransformDirection(_moveDir);
