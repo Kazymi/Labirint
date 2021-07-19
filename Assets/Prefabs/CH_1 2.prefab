@@ -253,7 +253,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725891838134023418}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.2859, y: 0.5, z: 8.2595}
+  m_LocalPosition: {x: -4.254609, y: 0.5, z: 8.243803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8753535155447820080}
@@ -10236,6 +10236,49 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5249963954310575226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 841811595546826304}
+  - component: {fileID: 7073012629261159602}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &841811595546826304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249963954310575226}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8753535155447820080}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7073012629261159602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249963954310575226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d779a76665ba7e4e99bbde260325706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5362746688536604575
 GameObject:
   m_ObjectHideFlags: 0
@@ -10414,7 +10457,7 @@ GameObject:
   - component: {fileID: 8753535155447820080}
   - component: {fileID: 2933725804148726074}
   m_Layer: 0
-  m_Name: CH_1
+  m_Name: CH_1 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10434,6 +10477,7 @@ Transform:
   - {fileID: 2484232821564412080}
   - {fileID: 6708415984589484520}
   - {fileID: 6735841966662849652}
+  - {fileID: 841811595546826304}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10450,7 +10494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _doors:
-    doorUp: {fileID: 9135286170234445594}
+    doorUp: {fileID: 5249963954310575226}
     doorDown: {fileID: 3047593861352408113}
     doorLeft: {fileID: 3248489991231944930}
     doorRight: {fileID: 8244037164637294928}

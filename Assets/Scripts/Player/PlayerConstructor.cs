@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerConstructor : MonoBehaviour
 {
       [SerializeField] private Movenment movenment;
-      [SerializeField] private GameObject _camera;
+      [SerializeField] private GameObject camera;
+      [SerializeField] private AnimationControl animationControl;
       
       private InputHandler _inputHandler;
       private PhotonView _pv;
@@ -17,11 +18,13 @@ public class PlayerConstructor : MonoBehaviour
             {
                   _inputHandler = ServiceLocator.GetService<InputHandler>();
                   movenment.Initialize(_inputHandler);
+                  animationControl.Initialized(_inputHandler);
             }
             else
             {
                   Destroy(movenment);
-                  Destroy(_camera);
+                  Destroy(camera);
+                  Destroy(animationControl);
             }
       }
 }

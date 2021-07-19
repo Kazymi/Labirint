@@ -5,75 +5,116 @@ using UnityEngine;
 
 public class ChunkGenerator : MonoBehaviour
 {
+    [SerializeField] private ChunkConfiguration _chunkConfiguration;
     [SerializeField] private Chunk[] generateChunks;
     [SerializeField] private Chunk mainChunk;
     [SerializeField] private int CountChunk;
 
     private int _maxX;
     private int _maxY;
-    private Chunk[,] _spawnedChunk;
+    private Chunk[,] _spawnedChunkPositions;
+    private List<Chunk> _spawnedChunk;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        _spawnedChunk = new Chunk[CountChunk, CountChunk];
-        _spawnedChunk[5, 5] = mainChunk;
+        _spawnedChunkPositions = new Chunk[CountChunk, CountChunk];
+        _spawnedChunkPositions[0, 0] = mainChunk;
 
-        _maxX = _spawnedChunk.GetLength(0) - 1;
-        _maxY = _spawnedChunk.GetLength(1) - 1;
+        _maxX = _spawnedChunkPositions.GetLength(0) - 1;
+        _maxY = _spawnedChunkPositions.GetLength(1) - 1;
 
         for (int i = 0; i < CountChunk + 1; i++)
         {
-            PlaceSpawnRoom();
+            yield return new WaitForSeconds(0.1f);
+           PlaceSpawnRoom();
         }
     }
 
+    private void GenerateTrap()
+    {
+        var unlockedChunks = new List<Chunk>();
+        foreach (var chunk in _spawnedChunk.Where(p => p.TrapUnlocked))
+        {
+            unlockedChunks.Add(chunk);
+        }
+        foreach (var trap in _chunkConfiguration._Traps)
+        {
+            while (trap.CheckSpawn())
+            {
+                
+            }            
+        }
+    }
     private void PlaceSpawnRoom()
     {
         HashSet<Vector2Int> vacantPlaces = new HashSet<Vector2Int>();
-        for (int x = 0; x < _spawnedChunk.GetLength(0); x++)
+        for (int x = 0; x < _spawnedChunkPositions.GetLength(0); x++)
         {
-            for (int y = 0; y < _spawnedChunk.GetLength(1); y++)
+            for (int y = 0; y < _spawnedChunkPositions.GetLength(1); y++)
             {
-                if (_spawnedChunk[x, y] == null) continue;
-                if (x > 0 && _spawnedChunk[x - 1, y] == null) vacantPlaces.Add(new Vector2Int(x - 1, y));
-                if (y > 0 && _spawnedChunk[x, y - 1] == null) vacantPlaces.Add(new Vector2Int(x, y - 1));
-                if (x < _maxX && _spawnedChunk[x + 1, y] == null) vacantPlaces.Add(new Vector2Int(x + 1, y));
-                if (y < _maxY && _spawnedChunk[x, y + 1] == null) vacantPlaces.Add(new Vector2Int(x, y + 1));
+                if (_spawnedChunkPositions[x, y] == null) continue;
+                if (x > 0 && _spawnedChunkPositions[x - 1, y] == null) vacantPlaces.Add(new Vector2Int(x - 1, y));
+                if (y > 0 && _spawnedChunkPositions[x, y - 1] == null) vacantPlaces.Add(new Vector2Int(x, y - 1));
+                if (x < _maxX && _spawnedChunkPositions[x + 1, y] == null) vacantPlaces.Add(new Vector2Int(x + 1, y));
+                if (y < _maxY && _spawnedChunkPositions[x, y + 1] == null) vacantPlaces.Add(new Vector2Int(x, y + 1));
             }
         }
 
         Chunk newChunk = Instantiate(generateChunks[Random.Range(0, generateChunks.Length)]);
-        newChunk.transform.position = new Vector3(1000, 25, 1000);
-        var limit = 2000;
+        
+        var limit = 500;
         while (limit-- > 0)
         {
             var position = vacantPlaces.ElementAt(Random.Range(0, vacantPlaces.Count));
             newChunk.GenerateDecor();
-            if (ConnectToDoor(newChunk, position))
-            {
-                newChunk.transform.position =
-                    new Vector3(position.x - 5, 0, position.y - 5) * 10;
-                _spawnedChunk[position.x, position.y] = newChunk;
-                break;
-            } else newChunk.RotateRandomly();
+            newChunk.RotateRandomly();
+            if (!ConnectToDoor(newChunk, position)) continue;
+            newChunk.transform.position =
+                new Vector3(position.x-5, 0, position.y-5) * 10;
+            _spawnedChunkPositions[position.x, position.y] = newChunk;
+            _spawnedChunk.Add(newChunk);
+            break;
         }
     }
+
+    private bool CheckDoor(GameObject door1, GameObject door2)
+    {
+        return door1 != null && door2 != null && door1.GetComponent<EmptyDoor>() == null &&
+               door2.GetComponent<EmptyDoor>() == null;
+    }
+
     private bool ConnectToDoor(Chunk chunk, Vector2Int pos)
     {
-
         List<Vector2Int> neighbours = new List<Vector2Int>();
 
-        if (chunk.Doors.DoorUp != null && pos.y < _maxY && _spawnedChunk[pos.x, pos.y + 1]?.Doors.DoorDown != null) neighbours.Add(Vector2Int.up);
-        if (chunk.Doors.DoorDown != null && pos.y > 0 && _spawnedChunk[pos.x, pos.y - 1]?.Doors.DoorUp != null) neighbours.Add(Vector2Int.down);
-        if (chunk.Doors.DoorRight != null && pos.x < _maxX && _spawnedChunk[pos.x + 1, pos.y]?.Doors.DoorLeft != null) neighbours.Add(Vector2Int.right);
-        if (chunk.Doors.DoorLeft != null && pos.x > 0 && _spawnedChunk[pos.x - 1, pos.y]?.Doors.DoorRight != null) neighbours.Add(Vector2Int.left);
+        if (pos.y < _maxY)
+            if (_spawnedChunkPositions[pos.x, pos.y + 1] != null)
+                if (pos.y < _maxY)
+                    if (CheckDoor(chunk.Doors.DoorUp, _spawnedChunkPositions[pos.x, pos.y + 1].Doors.DoorDown))
+                        neighbours.Add(Vector2Int.up);
+
+        if (pos.y > 0)
+            if (_spawnedChunkPositions[pos.x, pos.y - 1] != null)
+                if (CheckDoor(chunk.Doors.DoorDown, _spawnedChunkPositions[pos.x, pos.y - 1].Doors.DoorUp))
+                    neighbours.Add(Vector2Int.down);
+
+        if (pos.x < _maxX)
+            if (_spawnedChunkPositions[pos.x + 1, pos.y] != null)
+                if (CheckDoor(chunk.Doors.DoorRight, _spawnedChunkPositions[pos.x + 1, pos.y].Doors.DoorLeft))
+                    neighbours.Add(Vector2Int.right);
+
+        if (pos.x > 0)
+            if (_spawnedChunkPositions[pos.x - 1, pos.y] != null)
+                if (CheckDoor(chunk.Doors.DoorLeft, _spawnedChunkPositions[pos.x - 1, pos.y].Doors.DoorRight))
+                    neighbours.Add(Vector2Int.left);
+
 
         if (neighbours.Count == 0) return false;
 
         Vector2Int selectedDirection = neighbours[Random.Range(0, neighbours.Count)];
-        Chunk selectedRoom = _spawnedChunk[pos.x + selectedDirection.x, pos.y + selectedDirection.y];
+        Chunk selectedRoom = _spawnedChunkPositions[pos.x + selectedDirection.x, pos.y + selectedDirection.y];
 
-        if(selectedDirection == Vector2Int.up)
+        if (selectedDirection == Vector2Int.up)
         {
             chunk.Doors.DoorUp.SetActive(false);
             selectedRoom.Doors.DoorDown.SetActive(false);
