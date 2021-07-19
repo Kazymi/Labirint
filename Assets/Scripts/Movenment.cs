@@ -25,6 +25,7 @@ public class Movenment : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //TODO: should be in Update()
         _isGround = control.isGrounded;
         Move();
     }

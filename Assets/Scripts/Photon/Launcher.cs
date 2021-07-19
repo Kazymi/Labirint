@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+	// TODO: Singleton
 	public static Launcher Instance;
 
 	[SerializeField] TMP_InputField roomNameInputField;
