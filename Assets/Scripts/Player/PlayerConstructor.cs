@@ -8,6 +8,7 @@ public class PlayerConstructor : MonoBehaviour
       [SerializeField] private GameObject camera;
       [SerializeField] private AnimationControl animationControl;
       [SerializeField] private PlayerTrigger playerTrigger;
+      [SerializeField] private PlayerHealth  playerHealth;
       
       private InputHandler _inputHandler;
       private PhotonView _pv;
@@ -21,6 +22,7 @@ public class PlayerConstructor : MonoBehaviour
                   movenment.Initialize(_inputHandler);
                   animationControl.Initialized(_inputHandler);
                   _inputHandler.Initialize(playerTrigger);
+                  playerHealth.Initialize(movenment,animationControl);
             }
             else
             {
@@ -28,6 +30,7 @@ public class PlayerConstructor : MonoBehaviour
                   Destroy(camera);
                   Destroy(animationControl);
                   Destroy(playerTrigger);
+                  Destroy(playerHealth);
             }
       }
 }

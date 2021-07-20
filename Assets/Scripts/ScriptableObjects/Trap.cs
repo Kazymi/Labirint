@@ -9,7 +9,8 @@ public class Trap
 {
     [SerializeField] private int countTraps;
     [SerializeField] private TrapType trapType;
-    
+
+    private int _seed;
     public TrapType TrapType => trapType;
     
     private int _countSpawnedTrap;
@@ -27,6 +28,12 @@ public class Trap
 
     public Transform GetTrapPosition(Chunk chunk)
     {
+        if (_seed == 0)
+        {
+            _seed = ServiceLocator.GetService<SeedGenerator>().Seed;
+            Random.InitState(_seed);
+        }
+
         var trapTransforms = new List<Transform>();
         foreach (var i in chunk.TrapPositions.Where(t => t.TrapType == trapType))
         {

@@ -12,15 +12,22 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
    private const string _animationCloseName = "Close";
    private bool _opened;
    private Animator _animator;
+   public PhotonView PhotonView1 { get; set; }
+
    public override void OnEnable()
    {
       _animator = GetComponent<Animator>();
    }
 
+   private void Start()
+   {
+      PhotonView1 = GetComponent<PhotonView>();
+   }
+
    public void StartAction()
    {
       if(_opened) return;
-      photonView.RPC("Disable", RpcTarget.All);
+      PhotonView1.RPC("Disable", RpcTarget.All);
    }
 
    [PunRPC]
@@ -43,11 +50,18 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
       StartCoroutine(Cooldown());
    }
 
+   [PunRPC]
+   public void SetPosition(Vector3 vector3, Quaternion quaternionSerializable)
+   {
+      transform.position = vector3;
+      transform.rotation = quaternionSerializable;
+   }
+
    IEnumerator Cooldown()
    {
       yield return new WaitForSeconds(openingTime);
-      photonView.RPC("OpenDoor", RpcTarget.All);
+      PhotonView1.RPC("OpenDoor", RpcTarget.All);
       yield return new WaitForSeconds(cooldown - openingTime);
-      photonView.RPC("Enable", RpcTarget.All);
+      PhotonView1.RPC("Enable", RpcTarget.All);
    }
 }

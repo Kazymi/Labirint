@@ -7,7 +7,7 @@ public class TrapManager : MonoBehaviour
 {
     [SerializeField] private List<TrapConfiguration> trapConfigurations;
 
-    private Dictionary<TrapType, Factory> _factories = new Dictionary<TrapType, Factory>();
+    private Dictionary<TrapType, FactoryPhoton> _factories = new Dictionary<TrapType, FactoryPhoton>();
     private void Start()
     {
         foreach (var trap in trapConfigurations)
@@ -30,11 +30,11 @@ public class TrapManager : MonoBehaviour
     {
         if (_factories.ContainsKey(trapConfiguration.TrapType))
         {
-            _factories[trapConfiguration.TrapType].Prepolulate(trapConfiguration.TrapGameObject,trapConfiguration.StartCountInFactory);
+            _factories[trapConfiguration.TrapType].Prepolulate(trapConfiguration.TrapGameObject.name,trapConfiguration.StartCountInFactory);
         }
         else
         {
-            _factories.Add(trapConfiguration.TrapType,new Factory(trapConfiguration.TrapGameObject,trapConfiguration.StartCountInFactory,transform));
+            _factories.Add(trapConfiguration.TrapType,new FactoryPhoton(trapConfiguration.TrapGameObject.name,trapConfiguration.StartCountInFactory,transform));
         }
     }
 

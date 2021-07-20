@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Doors
 {
+    private int seed;
+    
     [SerializeField] private GameObject doorUp;
     [SerializeField] private GameObject doorDown;
     [SerializeField] private GameObject doorLeft;
@@ -66,13 +68,19 @@ public class Doors
 
     public Transform GetDoorTrapPosition()
     {
+        if (seed == 0)
+        {
+            seed = ServiceLocator.GetService<SeedGenerator>().Seed;
+            Random.InitState(seed);
+            Debug.LogError(seed);
+        }
+
         var positions = new List<Transform>();
         if (doorDown.activeSelf == false) positions.Add(trapDoorPointDown);
         if (doorLeft.activeSelf == false) positions.Add(trapDoorPointLeft);
         if (doorRight.activeSelf == false) positions.Add(trapDoorPointRight);
         if (doorUp.activeSelf == false) positions.Add(trapDoorPointUp);
         if (positions.Count == 0) return null;
-        Debug.Log(positions.Count);
         return positions[Random.Range(0, positions.Count)];
     }
 }

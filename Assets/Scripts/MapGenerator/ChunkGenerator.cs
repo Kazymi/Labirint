@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,7 @@ public class ChunkGenerator : MonoBehaviour
 
     private IEnumerator Start()
     {
+        Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
         _trapManager = ServiceLocator.GetService<TrapManager>();
         _spawnedChunkPositions = new Chunk[countChunk, countChunk];
         _spawnedChunkPositions[0, 0] = mainChunk;
@@ -33,7 +35,8 @@ public class ChunkGenerator : MonoBehaviour
             PlaceSpawnRoom();
         }
 
-        GenerateTrap();
+        if (PhotonNetwork.IsMasterClient)
+            GenerateTrap();
     }
 
     private void GenerateTrap()
@@ -48,7 +51,8 @@ public class ChunkGenerator : MonoBehaviour
         {
             while (trap.CheckSpawn())
             {
-                while (true)
+                var limit = 500;
+                while (limit-- > 0)
                 {
                     var chunk = unlockedChunks[Random.Range(0, unlockedChunks.Count)];
                     if (chunk.CheckSpawnTrapByType(trap.TrapType) == false)
@@ -68,8 +72,15 @@ public class ChunkGenerator : MonoBehaviour
                     if (spawnTransform.childCount != 0) continue;
                     var newTrap = _trapManager.GetTrapByType(trap.TrapType);
                     newTrap.transform.parent = spawnTransform;
-                    newTrap.transform.position = spawnTransform.position;
-                    newTrap.transform.rotation = spawnTransform.rotation;
+                    var i = newTrap.GetComponent<TrapSetting>();
+                    if (i != null)
+                    {
+                        i.PhotonView1 = newTrap.GetComponent<PhotonView>();
+                        i.PhotonView1.RPC("SetPosition", RpcTarget.All,
+                            spawnTransform.position,
+                            spawnTransform.rotation);
+                    }
+
                     break;
                 }
             }

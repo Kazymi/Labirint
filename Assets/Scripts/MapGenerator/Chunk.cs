@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ public class Chunk : MonoBehaviour
     public Doors Doors => _doors;
     public List<TrapPositions> TrapPositions => trapPositions;
 
+    private void Start()
+    {
+        Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
+    }
+
     public bool TrapUnlocked
     {
         get => trapUnlocked;
@@ -21,7 +27,7 @@ public class Chunk : MonoBehaviour
 
     public void GenerateDecor()
     {
-        _decorations[Random.Range(0,_decorations.Count)].SetActive(true);
+        //_decorations[Random.Range(0,_decorations.Count)].SetActive(true);
     }
 
     public bool CheckSpawnTrapByType(TrapType trapType)

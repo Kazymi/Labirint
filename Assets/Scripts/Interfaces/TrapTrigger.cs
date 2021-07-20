@@ -5,11 +5,12 @@ using UnityEngine;
 
 public interface TrapSetting
 {
+   PhotonView PhotonView1 { get; set; }
    void StartAction();
 
-   [PunRPC]
    void Enable();
-   
-   [PunRPC]
+
    void Disable();
+
+   void SetPosition(Vector3 vector3,Quaternion quaternionSerializable);
 }
