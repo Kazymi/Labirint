@@ -11,9 +11,8 @@ public class Trap
     [SerializeField] private TrapType trapType;
 
     private int _seed;
-    public TrapType TrapType => trapType;
-    
     private int _countSpawnedTrap;
+    public TrapType TrapType => trapType;
 
     public bool CheckSpawn()
     {

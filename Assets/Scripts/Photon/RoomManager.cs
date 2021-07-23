@@ -2,39 +2,42 @@
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.IO;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 
-public class RoomManager : MonoBehaviourPunCallbacks
+public class RoomManager : MonoBehaviourPunCallbacks,IOnEventCallback
 {
-	public static RoomManager Instance;
 
-	void Awake()
+	private void Awake()
 	{
-		if(Instance)
-		{
-			Destroy(gameObject);
-			return;
-		}
 		DontDestroyOnLoad(gameObject);
-		Instance = this;
 	}
 
 	public override void OnEnable()
 	{
 		base.OnEnable();
+		PhotonNetwork.AddCallbackTarget(this);
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
 	public override void OnDisable()
 	{
 		base.OnDisable();
+		PhotonNetwork.RemoveCallbackTarget(this);
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
-
-	void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+	
+	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
 	{
 		if(scene.buildIndex == 1)
 		{
 			PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
 		}
+	}
+	public void OnEvent(EventData photonEvent)
+	{
+		byte eventCode = photonEvent.Code;
+		if (eventCode != (int) EventType.PlayerFindAllKeys) return;
+		Destroy(gameObject);
 	}
 }

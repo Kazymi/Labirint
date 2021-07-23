@@ -32,7 +32,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 	[SerializeField] private Menu errorMenu;
 	[SerializeField] private Menu roomMenu;
 	
-	void Awake()
+	private void Awake()
 	{
 		Instance = this;
 	}
@@ -54,9 +54,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 		startGameRoomButton.onClick.RemoveListener(StartGame);
 	}
 
-	void Start()
+	private void Start()
 	{
 		PhotonNetwork.ConnectUsingSettings();
+		ServiceLocator.Initialize();
 	}
 
 	public override void OnConnectedToMaster()

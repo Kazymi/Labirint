@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,13 @@ public class ChunkGenerator : MonoBehaviour
     private Chunk[,] _spawnedChunkPositions;
     private List<Chunk> _spawnedChunk = new List<Chunk>();
 
-    private IEnumerator Start()
+    public List<Chunk> SpawnedChunk => _spawnedChunk;
+    
+    public IEnumerator StartGenerate()
     {
-        Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
+        var seed = ServiceLocator.GetService<SeedGenerator>().Seed;
+        Random.InitState(seed);
+        Debug.LogError(seed);
         _trapManager = ServiceLocator.GetService<TrapManager>();
         _spawnedChunkPositions = new Chunk[countChunk, countChunk];
         _spawnedChunkPositions[0, 0] = mainChunk;
@@ -35,11 +38,12 @@ public class ChunkGenerator : MonoBehaviour
             PlaceSpawnRoom();
         }
 
-        if (PhotonNetwork.IsMasterClient)
-            GenerateTrap();
+        if (PhotonNetwork.IsMasterClient == false) yield break;
+        GenerateTrap(seed);
+        ServiceLocator.GetService<KeyManager>().Initialize(this);
     }
 
-    private void GenerateTrap()
+    private void GenerateTrap(int seed)
     {
         var unlockedChunks = new List<Chunk>();
         foreach (var chunk in _spawnedChunk.Where(p => p.TrapUnlocked))
@@ -63,9 +67,9 @@ public class ChunkGenerator : MonoBehaviour
                     Transform spawnTransform;
                     if (trap.TrapType == TrapType.DoorTrap)
                     {
-                        var posDoor = chunk.Doors.GetDoorTrapPosition();
+                        var posDoor = chunk.Doors.GetDoorTrapPosition(seed);
                         if (posDoor == null) continue;
-                        spawnTransform = chunk.Doors.GetDoorTrapPosition();
+                        spawnTransform = posDoor;
                     }
                     else spawnTransform = trap.GetTrapPosition(chunk);
 
@@ -176,8 +180,6 @@ public class ChunkGenerator : MonoBehaviour
             chunk.Doors.DoorLeft.SetActive(false);
             selectedRoom.Doors.DoorRight.SetActive(false);
         }
-
-
         return true;
     }
 }

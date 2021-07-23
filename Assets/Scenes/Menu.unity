@@ -1564,7 +1564,7 @@ MonoBehaviour:
   roomListItemPrefab: {fileID: 5590041413162275129, guid: 5d2125c99c1303c4ebb51e5c075ce81d, type: 3}
   playerListContent: {fileID: 477289445}
   PlayerListItemPrefab: {fileID: 1878336002063414184, guid: bf63f2939062f184f861860e2cdeeed7, type: 3}
-  startGameButton: {fileID: 513533390}
+  startGameButton: {fileID: 740400222}
   createRoomButton: {fileID: 513533392}
   leaveRoomButton: {fileID: 451307852}
   startGameRoomButton: {fileID: 740400224}

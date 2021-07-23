@@ -66,15 +66,9 @@ public class Doors
         set => doorRight = value;
     }
 
-    public Transform GetDoorTrapPosition()
+    public Transform GetDoorTrapPosition(int seed)
     {
-        if (seed == 0)
-        {
-            seed = ServiceLocator.GetService<SeedGenerator>().Seed;
-            Random.InitState(seed);
-            Debug.LogError(seed);
-        }
-
+        Random.InitState(seed);
         var positions = new List<Transform>();
         if (doorDown.activeSelf == false) positions.Add(trapDoorPointDown);
         if (doorLeft.activeSelf == false) positions.Add(trapDoorPointLeft);

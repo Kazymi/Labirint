@@ -30,6 +30,9 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 2
     Name: Speed
+  - Type: 9
+    SynchronizeType: 2
+    Name: Die
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
@@ -226,6 +229,8 @@ GameObject:
   - component: {fileID: 7202062888518840985}
   - component: {fileID: 6649614691413549634}
   - component: {fileID: 6618674264993048881}
+  - component: {fileID: 8415855737931614389}
+  - component: {fileID: 1150555537288900477}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -315,6 +320,8 @@ MonoBehaviour:
   animationControl: {fileID: 6452227372241515815}
   playerTrigger: {fileID: 6649614691413549634}
   playerHealth: {fileID: 6618674264993048881}
+  playerStatistics: {fileID: 8415855737931614389}
+  playerPunch: {fileID: 1150555537288900477}
 --- !u!114 &1285176672482525404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +375,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde40dbf324ee314598a97c139ea53e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerRadius: 5
+  triggerRadius: 2
+  cooldown: 2
 --- !u!114 &6618674264993048881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,6 +389,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2ec5a0d0c423d4bb138c913e0ec186, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8415855737931614389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8764212989323483841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2b6dd3fa112994cb7995094f2b6f10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1150555537288900477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8764212989323483841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76e30f8ecf910ee43819bd99e8fa31e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchTranform: {fileID: 6646480905210005481}
+  cooldown: 1
+  maxDistance: 1
+  kickStrength: 10
 --- !u!1 &8965364909247047593
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,6 +465,36 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!1 &9076096524911490369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6646480905210005481}
+  m_Layer: 0
+  m_Name: Punch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6646480905210005481
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9076096524911490369}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.51, z: 0.321}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1440637197718477430}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1440637197718864120
 PrefabInstance:
   m_ObjectHideFlags: 0

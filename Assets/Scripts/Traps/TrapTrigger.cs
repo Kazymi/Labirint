@@ -35,12 +35,6 @@ public class TrapTrigger : MonoBehaviourPunCallbacks,TrapSetting
         if(_activated) return;
         photonView.RPC("Disable", RpcTarget.All);
     }
-    
-    private void StartAction(PlayerHealth playerHealth)
-    {
-        playerHealth.Death();
-        photonView.RPC("Disable", RpcTarget.All);
-    }
 
     [PunRPC]
     public void Enable()
@@ -69,5 +63,11 @@ public class TrapTrigger : MonoBehaviourPunCallbacks,TrapSetting
         _animator.Play(animationNameClose,0,0);
         yield return new WaitForSeconds(timerCooldown - timerAction);
         photonView.RPC("Enable", RpcTarget.All);
+    }
+    
+    private void StartAction(PlayerHealth playerHealth)
+    {
+        playerHealth.Death();
+        photonView.RPC("Disable", RpcTarget.All);
     }
 }

@@ -6,31 +6,31 @@ public class FactoryPhoton
 {
     private int _countElement;
 
-    private PoolPhoton pool { get; set; }
+    private PoolPhoton _pool;
 
     public FactoryPhoton(string spawnElementName, int countElement, Transform parent)
     {
         _countElement = countElement;
-        pool = new PoolPhoton(spawnElementName, _countElement, parent);
+        _pool = new PoolPhoton(spawnElementName, _countElement, parent);
     }
-
+    
     public GameObject Create()
     {
-        return pool.Pull();
+        return _pool.Pull();
     }
 
     public void Mix()
     {
-        pool.Mix();
+        _pool.Mix();
     }
 
     public void Prepolulate(string nameGameObject, int count)
     {
-        pool.Prepolulate(count, nameGameObject);
+        _pool.Prepolulate(count, nameGameObject);
     }
 
     public void Destroy(GameObject gameObject)
     {
-        pool.Push(gameObject);
+        _pool.Push(gameObject);
     }
 }

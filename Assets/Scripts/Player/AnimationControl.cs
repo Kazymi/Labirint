@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -31,6 +28,6 @@ public class AnimationControl : MonoBehaviour
     public void Die()
     {
         _alive = false;
-        _animator.Play(_animationDieName);
+        _animator.SetBool(_animationDieName,true);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class TrapManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class TrapManager : MonoBehaviour
     private Dictionary<TrapType, FactoryPhoton> _factories = new Dictionary<TrapType, FactoryPhoton>();
     private void Start()
     {
+        if(PhotonNetwork.IsMasterClient == false) return;
+        
         foreach (var trap in trapConfigurations)
         {
             CreateNewTrap(trap);
@@ -26,6 +29,17 @@ public class TrapManager : MonoBehaviour
         ServiceLocator.Unsubscribe<TrapManager>();
     }
 
+    public GameObject GetTrapByType(TrapType trapType)
+    {
+        return _factories[trapType].Create();
+    }
+
+    public GameObject GetRandomTrapByType(TrapType trapType)
+    {
+        _factories[trapType].Mix();
+        return _factories[trapType].Create();
+    }
+    
     private void CreateNewTrap(TrapConfiguration trapConfiguration)
     {
         if (_factories.ContainsKey(trapConfiguration.TrapType))
@@ -36,16 +50,5 @@ public class TrapManager : MonoBehaviour
         {
             _factories.Add(trapConfiguration.TrapType,new FactoryPhoton(trapConfiguration.TrapGameObject.name,trapConfiguration.StartCountInFactory,transform));
         }
-    }
-
-    public GameObject GetTrapByType(TrapType trapType)
-    {
-        return _factories[trapType].Create();
-    }
-
-    public GameObject GetRandomTrapByType(TrapType trapType)
-    {
-        _factories[trapType].Mix();
-        return _factories[trapType].Create();
     }
 }

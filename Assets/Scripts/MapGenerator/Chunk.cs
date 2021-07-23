@@ -3,27 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Chunk : MonoBehaviour
 {
     [SerializeField] private List<TrapPositions> trapPositions;
-    [SerializeField] private Doors _doors;
-    [SerializeField] private List<GameObject> _decorations;
+    [SerializeField] private List<Transform> positionKeys;
+    [SerializeField] private Doors doors;
+    [SerializeField] private List<GameObject> decorations;
     [SerializeField] private bool trapUnlocked = true;
-    public Doors Doors => _doors;
+    public Doors Doors => doors;
     public List<TrapPositions> TrapPositions => trapPositions;
+    public List<Transform> PositionKeys => positionKeys;
 
     private void Start()
     {
         Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
     }
 
-    public bool TrapUnlocked
-    {
-        get => trapUnlocked;
-        set => trapUnlocked = value;
-    }
+    public bool TrapUnlocked => trapUnlocked;
 
     public void GenerateDecor()
     {
@@ -43,19 +42,19 @@ public class Chunk : MonoBehaviour
     public void RotateRandomly()
     {
         transform.Rotate(0, 90, 0);
-            var tmp = _doors.DoorLeft;
-            var tmpTrap = _doors.TrapDoorPointLeft;
+            var tmp = doors.DoorLeft;
+            var tmpTrap = doors.TrapDoorPointLeft;
             
-            _doors.DoorLeft = _doors.DoorDown;
-            _doors.TrapDoorPointLeft = _doors.TrapDoorPointDown;
+            doors.DoorLeft = doors.DoorDown;
+            doors.TrapDoorPointLeft = doors.TrapDoorPointDown;
             
-            _doors.DoorDown = _doors.DoorRight;
-            _doors.TrapDoorPointDown = _doors.TrapDoorPointRight;
+            doors.DoorDown = doors.DoorRight;
+            doors.TrapDoorPointDown = doors.TrapDoorPointRight;
             
-            _doors.DoorRight = _doors.DoorUp;
-            _doors.TrapDoorPointRight = _doors.TrapDoorPointUp;
+            doors.DoorRight = doors.DoorUp;
+            doors.TrapDoorPointRight = doors.TrapDoorPointUp;
             
-            _doors.DoorUp = tmp;
-            _doors.TrapDoorPointUp = tmpTrap;
+            doors.DoorUp = tmp;
+            doors.TrapDoorPointUp = tmpTrap;
     }
 }

@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
 		menu.OpenCanvas();
 	}
 
-	public void CloseMenu(Menu menu)
+	private void CloseMenu(Menu menu)
 	{
 		menu.Close();
 	}

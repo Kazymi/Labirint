@@ -17,15 +17,16 @@ public class Movenment : MonoBehaviour
     private bool _isGround = false;
     private Vector3 _moveDir = Vector3.zero;
     private float _speedBoost = 0f;
+    private Rigidbody _rigidbody;
 
     private void Start()
     {
+        _rigidbody = GetComponent<Rigidbody>();
         control = GetComponent<CharacterController>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        //TODO: should be in Update()
         _isGround = control.isGrounded;
         Move();
     }
@@ -40,8 +41,7 @@ public class Movenment : MonoBehaviour
         if (_isGround)
         {
             var direction = _inputHandler.MoveDirection();
-            _moveDir = new Vector3(direction.x, 0, direction.y);
-            _moveDir = transform.TransformDirection(_moveDir);
+            _moveDir = new Vector3(direction.x, 0, direction.y).normalized;
             _moveDir *= speed;
             if (Input.GetKey(KeyCode.Space))
             {

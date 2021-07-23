@@ -13,8 +13,8 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
    private bool _opened;
    private Animator _animator;
    public PhotonView PhotonView1 { get; set; }
-
-   public override void OnEnable()
+   
+   private void Awake()
    {
       _animator = GetComponent<Animator>();
    }
@@ -57,7 +57,7 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
       transform.rotation = quaternionSerializable;
    }
 
-   IEnumerator Cooldown()
+   private IEnumerator Cooldown()
    {
       yield return new WaitForSeconds(openingTime);
       PhotonView1.RPC("OpenDoor", RpcTarget.All);

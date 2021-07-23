@@ -9,14 +9,28 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private bool mobile;
     
     private PlayerTrigger _playerTrigger;
+    private PlayerPunch _playerPunch;
     
     private void Awake()
     {
         ServiceLocator.Subscribe<InputHandler>(this);
     }
 
-    public void Initialize(PlayerTrigger playerTrigger)
+    private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _playerTrigger.OnClick();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            _playerPunch.Punch();
+        }
+    }
+    
+    public void Initialize(PlayerTrigger playerTrigger,PlayerPunch playerPunch)
+    {
+        _playerPunch = playerPunch;
         _playerTrigger = playerTrigger;
     }
     public Vector2 MoveDirection()
@@ -27,15 +41,7 @@ public class InputHandler : MonoBehaviour
         }
         else
         {
-            return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _playerTrigger.OnClick();
+            return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         }
     }
 }

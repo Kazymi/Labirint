@@ -4,33 +4,37 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 public class PlayerConstructor : MonoBehaviour
 {
-      [SerializeField] private Movenment movenment;
-      [SerializeField] private GameObject camera;
-      [SerializeField] private AnimationControl animationControl;
-      [SerializeField] private PlayerTrigger playerTrigger;
-      [SerializeField] private PlayerHealth  playerHealth;
-      
-      private InputHandler _inputHandler;
-      private PhotonView _pv;
+    [SerializeField] private Movenment movenment;
+    [SerializeField] private GameObject camera;
+    [SerializeField] private AnimationControl animationControl;
+    [SerializeField] private PlayerTrigger playerTrigger;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerStatistics playerStatistics;
+    [SerializeField] private PlayerPunch playerPunch;
 
-      private void Start()
-      {
-            _pv = GetComponent<PhotonView>();
-            if (_pv.IsMine)
-            {
-                  _inputHandler = ServiceLocator.GetService<InputHandler>();
-                  movenment.Initialize(_inputHandler);
-                  animationControl.Initialized(_inputHandler);
-                  _inputHandler.Initialize(playerTrigger);
-                  playerHealth.Initialize(movenment,animationControl);
-            }
-            else
-            {
-                  Destroy(movenment);
-                  Destroy(camera);
-                  Destroy(animationControl);
-                  Destroy(playerTrigger);
-                  Destroy(playerHealth);
-            }
-      }
+
+    public PlayerPunch PlayerPunch => playerPunch;
+    private void Start()
+    {
+        var pv = GetComponent<PhotonView>();
+        if (pv.IsMine)
+        {
+            var inputHandler = ServiceLocator.GetService<InputHandler>();
+            var gameManager = ServiceLocator.GetService<GameManager>();
+            movenment.Initialize(inputHandler);
+            animationControl.Initialized(inputHandler);
+            inputHandler.Initialize(playerTrigger,playerPunch);
+            playerHealth.Initialize(movenment, animationControl);
+            playerStatistics.Initialize(gameManager);
+        }
+        else
+        {
+            Destroy(playerStatistics);
+            Destroy(movenment);
+            Destroy(camera);
+            Destroy(animationControl);
+            Destroy(playerTrigger);
+            Destroy(playerHealth);
+        }
+    }
 }

@@ -5,6 +5,10 @@ public static class ServiceLocator
 {
     private static Dictionary<Type, object> services = new Dictionary<Type, object>();
 
+    public static void Initialize()
+    {
+        services = new Dictionary<Type, object>();
+    }
     public static void Subscribe<T>(object service)
     {
         services.Add(typeof(T), service);
