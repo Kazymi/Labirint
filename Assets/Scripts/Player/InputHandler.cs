@@ -10,10 +10,23 @@ public class InputHandler : MonoBehaviour
     
     private PlayerTrigger _playerTrigger;
     private PlayerPunch _playerPunch;
+    private Movenment _movenment;
+    private bool _paused;
+    private GameMenu _gameMenu;
     
-    private void Awake()
+    private void OnEnable()
     {
         ServiceLocator.Subscribe<InputHandler>(this);
+    }
+
+    private void OnDisable()
+    {
+        ServiceLocator.Unsubscribe<InputHandler>();
+    }
+
+    private void Start()
+    {
+        _gameMenu = ServiceLocator.GetService<GameMenu>();
     }
 
     private void Update()
@@ -26,12 +39,20 @@ public class InputHandler : MonoBehaviour
         {
             _playerPunch.Punch();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            _paused = !_paused;
+            _movenment.enabled = !_paused;
+            _gameMenu.Paused(_paused);
+        }
     }
     
-    public void Initialize(PlayerTrigger playerTrigger,PlayerPunch playerPunch)
+    public void Initialize(PlayerTrigger playerTrigger,PlayerPunch playerPunch, Movenment movenment)
     {
         _playerPunch = playerPunch;
         _playerTrigger = playerTrigger;
+        _movenment = movenment;
     }
     public Vector2 MoveDirection()
     {

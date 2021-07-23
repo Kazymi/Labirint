@@ -16,6 +16,7 @@ public class KeyManager : MonoBehaviourPunCallbacks
     private FactoryPhoton _factoryPhoton;
 
     public PhotonView PhotonViewMain => _photonView;
+    
     public override void OnEnable()
     {
         ServiceLocator.Subscribe<KeyManager>(this);
@@ -39,6 +40,16 @@ public class KeyManager : MonoBehaviourPunCallbacks
         Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
     }
 
+    public Key GetRandomKey()
+    {
+        foreach (var VARIABLE in keys)
+        {
+            return VARIABLE.Value;
+        }
+
+        return null;
+    }
+    
     public void Initialize(ChunkGenerator chunkGenerator)
     {
         _chunkGenerator = chunkGenerator;

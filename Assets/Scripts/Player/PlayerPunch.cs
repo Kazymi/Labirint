@@ -9,7 +9,6 @@ using UnityEngine;
 public class PlayerPunch : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Transform punchTranform;
-    [SerializeField] private float cooldown = 1f;
     [SerializeField] private float maxDistance = 1f;
     [SerializeField] private float kickStrength = 3f;
     private PhotonView photonViewMain;

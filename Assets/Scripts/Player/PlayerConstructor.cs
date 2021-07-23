@@ -23,7 +23,7 @@ public class PlayerConstructor : MonoBehaviour
             var gameManager = ServiceLocator.GetService<GameManager>();
             movenment.Initialize(inputHandler);
             animationControl.Initialized(inputHandler);
-            inputHandler.Initialize(playerTrigger,playerPunch);
+            inputHandler.Initialize(playerTrigger,playerPunch,movenment);
             playerHealth.Initialize(movenment, animationControl);
             playerStatistics.Initialize(gameManager);
         }

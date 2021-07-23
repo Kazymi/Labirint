@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ public class ChunkGenerator : MonoBehaviour
     [SerializeField] private Chunk[] generateChunks;
     [SerializeField] private Chunk mainChunk;
     [SerializeField] private int countChunk;
+    [SerializeField] private int countLeavers;
 
     private int _maxX;
     private int _maxY;
@@ -19,7 +21,17 @@ public class ChunkGenerator : MonoBehaviour
     private List<Chunk> _spawnedChunk = new List<Chunk>();
 
     public List<Chunk> SpawnedChunk => _spawnedChunk;
-    
+
+    private void OnEnable()
+    {
+        ServiceLocator.Subscribe<ChunkGenerator>(this);
+    }
+
+    private void OnDisable()
+    {
+        ServiceLocator.Unsubscribe<ChunkGenerator>();
+    }
+
     public IEnumerator StartGenerate()
     {
         var seed = ServiceLocator.GetService<SeedGenerator>().Seed;
@@ -38,11 +50,47 @@ public class ChunkGenerator : MonoBehaviour
             PlaceSpawnRoom();
         }
 
-        if (PhotonNetwork.IsMasterClient == false) yield break;
-        GenerateTrap(seed);
-        ServiceLocator.GetService<KeyManager>().Initialize(this);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            GenerateTrap(seed);
+            GenerateLeverTrap(seed);
+            ServiceLocator.GetService<KeyManager>().Initialize(this);
+        }
+        GenerateDecor();
+    }
+    public void GenerateLeverTrap(int seed)
+    {
+        for (int i = 0; i != countLeavers; i++)
+        {
+            var idChunk = GetChunkWithoutLever();
+            var chunk = _spawnedChunk[idChunk];
+            var positionLeaver = chunk.PointsLever[Random.Range(0, chunk.PointsLever.Count)];
+            var leaver = PhotonNetwork.Instantiate(chunk.Lever.name, positionLeaver.position, positionLeaver.rotation);
+            leaver.GetComponent<PhotonView>().RPC("Initialize",RpcTarget.All,idChunk,seed);
+        }
     }
 
+    private int GetChunkWithoutLever()
+    {
+        var chunks = new List<Chunk>();
+        foreach (var chunk in _spawnedChunk.Where(t => t.SpawnedLeaver == false))
+        {
+            chunks.Add(chunk);
+        }
+        var returnChunk = Random.Range(0, chunks.Count);
+        _spawnedChunk[returnChunk].SpawnedLeaver = true;
+        return returnChunk;
+    }
+
+    private void GenerateDecor()
+    {
+        foreach (var chunk in _spawnedChunk)
+        {
+            var newSeed = Random.Range(10000, 99999);
+            Random.InitState(newSeed);
+            chunk.GenerateDecor(newSeed);
+        }
+    }
     private void GenerateTrap(int seed)
     {
         var unlockedChunks = new List<Chunk>();
@@ -76,15 +124,14 @@ public class ChunkGenerator : MonoBehaviour
                     if (spawnTransform.childCount != 0) continue;
                     var newTrap = _trapManager.GetTrapByType(trap.TrapType);
                     newTrap.transform.parent = spawnTransform;
-                    var i = newTrap.GetComponent<TrapSetting>();
+                    var i = newTrap.GetComponent<ITrapSetting>();
                     if (i != null)
                     {
-                        i.PhotonView1 = newTrap.GetComponent<PhotonView>();
-                        i.PhotonView1.RPC("SetPosition", RpcTarget.All,
+                        i.PhotonView = newTrap.GetComponent<PhotonView>();
+                        i.PhotonView.RPC("SetPosition", RpcTarget.All,
                             spawnTransform.position,
                             spawnTransform.rotation);
                     }
-
                     break;
                 }
             }
@@ -112,7 +159,6 @@ public class ChunkGenerator : MonoBehaviour
         while (limit-- > 0)
         {
             var position = vacantPlaces.ElementAt(Random.Range(0, vacantPlaces.Count));
-            newChunk.GenerateDecor();
             newChunk.RotateRandomly();
             if (!ConnectToDoor(newChunk, position)) continue;
             newChunk.transform.position =

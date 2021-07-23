@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1440637197718832726}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d4ae69663d7f7748a14baa40bf1f5f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ff42acc25074b94bb7827d712477ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7523657120742381909
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8764212989323483841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 559962c9697eb43489164839714311a1, type: 3}
+  m_Script: {fileID: 11500000, guid: e03cf4927fbc4a3d999c53bb40c278cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   movenment: {fileID: 8764212989323483843}
@@ -372,7 +372,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8764212989323483841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dde40dbf324ee314598a97c139ea53e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 713bf15bce734fdcbe8abddc754fef69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   triggerRadius: 2
@@ -386,7 +386,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8764212989323483841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b2ec5a0d0c423d4bb138c913e0ec186, type: 3}
+  m_Script: {fileID: 11500000, guid: 892e82abad3a43e4979e115b9b5db957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8415855737931614389
@@ -398,7 +398,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8764212989323483841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a2b6dd3fa112994cb7995094f2b6f10, type: 3}
+  m_Script: {fileID: 11500000, guid: 39d35eb578344c868a06ae3985e3b7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1150555537288900477
@@ -410,13 +410,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8764212989323483841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e30f8ecf910ee43819bd99e8fa31e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 781f0a7604484ef18c154c00c9c65f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   punchTranform: {fileID: 6646480905210005481}
   cooldown: 1
   maxDistance: 1
-  kickStrength: 10
+  kickStrength: 3
 --- !u!1 &8965364909247047593
 GameObject:
   m_ObjectHideFlags: 0

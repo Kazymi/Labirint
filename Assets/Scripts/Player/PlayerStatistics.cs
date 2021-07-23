@@ -20,6 +20,7 @@ public class PlayerStatistics : MonoBehaviour
     private void Start()
     {
         _gameStatisticMenu = ServiceLocator.GetService<GameStatisticMenu>();
+        _foundedKeys = 0;
         _gameStatisticMenu.UpdateKeySlider(0);
     }
 

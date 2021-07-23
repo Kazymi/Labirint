@@ -3,7 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView),typeof(Animator))]
-public class Door : MonoBehaviourPunCallbacks,TrapSetting
+public class Door : MonoBehaviourPunCallbacks,ITrapSetting
 {
    [SerializeField] private float cooldown = 12f;
    [SerializeField] private float openingTime = 5f;
@@ -12,7 +12,7 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
    private const string _animationCloseName = "Close";
    private bool _opened;
    private Animator _animator;
-   public PhotonView PhotonView1 { get; set; }
+   public PhotonView PhotonView { get; set; }
    
    private void Awake()
    {
@@ -21,13 +21,13 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
 
    private void Start()
    {
-      PhotonView1 = GetComponent<PhotonView>();
+      PhotonView = GetComponent<PhotonView>();
    }
 
    public void StartAction()
    {
       if(_opened) return;
-      PhotonView1.RPC("Disable", RpcTarget.All);
+      PhotonView.RPC("Disable", RpcTarget.All);
    }
 
    [PunRPC]
@@ -60,8 +60,8 @@ public class Door : MonoBehaviourPunCallbacks,TrapSetting
    private IEnumerator Cooldown()
    {
       yield return new WaitForSeconds(openingTime);
-      PhotonView1.RPC("OpenDoor", RpcTarget.All);
+      PhotonView.RPC("OpenDoor", RpcTarget.All);
       yield return new WaitForSeconds(cooldown - openingTime);
-      PhotonView1.RPC("Enable", RpcTarget.All);
+      PhotonView.RPC("Enable", RpcTarget.All);
    }
 }

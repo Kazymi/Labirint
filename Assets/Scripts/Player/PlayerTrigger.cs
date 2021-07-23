@@ -13,9 +13,9 @@ public class PlayerTrigger : MonoBehaviour
     {
         if(_unlockTrigger == false) return;
         var allElement = Physics.OverlapSphere(transform.position, triggerRadius);
-        foreach (var findElement in allElement.Where(t => t.GetComponent<TrapSetting>() != null))
+        foreach (var findElement in allElement.Where(t => t.GetComponent<ITrapSetting>() != null))
         {
-            findElement.GetComponent<TrapSetting>().StartAction();
+            findElement.GetComponent<ITrapSetting>().StartAction();
         }
 
         StartCoroutine(Timer());

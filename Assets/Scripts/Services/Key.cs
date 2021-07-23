@@ -2,9 +2,10 @@
 using Photon.Realtime;
 using UnityEngine;
 
-[RequireComponent(typeof(PhotonView),typeof(Collider),typeof(Rigidbody))]
+[RequireComponent(typeof(PhotonView), typeof(Collider), typeof(Rigidbody))]
 public class Key : MonoBehaviourPunCallbacks
 {
+
     private KeyManager _keyManager;
     private PhotonView _photonView;
     private PlayerStatistics _playerStatistics;
@@ -36,13 +37,12 @@ public class Key : MonoBehaviourPunCallbacks
         transform.position = pos;
         transform.rotation = rot;
     }
-    
+
     private void Die()
     {
-        if(keyUnlock == false) return;
+        if (keyUnlock == false) return;
         keyUnlock = false;
-        _keyManager.PhotonViewMain.RPC("DestroyGameObject",RpcTarget.All,_photonView.ViewID);
-        Debug.LogError("Player take key");
+        _keyManager.PhotonViewMain.RPC("DestroyGameObject", RpcTarget.All, _photonView.ViewID);
         _playerStatistics.AddFoundKey();
     }
 }
