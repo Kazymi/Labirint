@@ -12,6 +12,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 	// TODO: Singleton
 	public static Launcher Instance;
 
+	// TODO: break it into separate scripts
 	[SerializeField] TMP_InputField roomNameInputField;
 	[SerializeField] TMP_Text errorText;
 	[SerializeField] TMP_Text roomNameText;
@@ -78,6 +79,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 		{
 			return;
 		}
+		// TODO: as an option Facade pattern can be implemented for the whole networking system
 		PhotonNetwork.CreateRoom(roomNameInputField.text);
 		menuManager.OpenMenu(loadMenu);
 	}

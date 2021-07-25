@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerConstructor : MonoBehaviour
 {
     [SerializeField] private Movenment movenment;
+    // TODO: make separate behaviour for camera instead of just chaining it on Player GameObject
     [SerializeField] private GameObject camera;
     [SerializeField] private AnimationControl animationControl;
     [SerializeField] private PlayerTrigger playerTrigger;
@@ -12,8 +13,8 @@ public class PlayerConstructor : MonoBehaviour
     [SerializeField] private PlayerStatistics playerStatistics;
     [SerializeField] private PlayerPunch playerPunch;
 
-
     public PlayerPunch PlayerPunch => playerPunch;
+
     private void Start()
     {
         var pv = GetComponent<PhotonView>();
@@ -23,12 +24,13 @@ public class PlayerConstructor : MonoBehaviour
             var gameManager = ServiceLocator.GetService<GameManager>();
             movenment.Initialize(inputHandler);
             animationControl.Initialized(inputHandler);
-            inputHandler.Initialize(playerTrigger,playerPunch,movenment);
+            inputHandler.Initialize(playerTrigger, playerPunch, movenment);
             playerHealth.Initialize(movenment, animationControl);
             playerStatistics.Initialize(gameManager);
         }
         else
         {
+            // TODO: you can add component in runtime instead of destroying unnecessary ones
             Destroy(playerStatistics);
             Destroy(movenment);
             Destroy(camera);

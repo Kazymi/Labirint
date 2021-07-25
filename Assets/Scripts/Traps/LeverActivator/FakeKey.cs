@@ -6,6 +6,8 @@ using UnityEngine;
 public class FakeKey : LeaverActivator
 {
     [SerializeField] private GameObject explosionEffect;
+    
+    // TODO: method can be declared virtual in abstract class
     public override void Activate()
     {
         

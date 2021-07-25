@@ -24,13 +24,9 @@ public class Chunk : MonoBehaviour
     public List<Transform> PositionKeys => positionKeys;
     public List<LeaverActivator> ListActivators => listActivators;
     public List<Transform> PointsLever => pointsLever;
-    public bool SpawnedLeaver;
+    public bool spawnedLever;
 
-    public GameObject Lever
-    {
-        set => lever = value;
-        get => lever;
-    }
+    public GameObject Lever => lever;
     public bool TrapUnlocked => trapUnlocked;
 
     public void GenerateDecor(int newSeed)

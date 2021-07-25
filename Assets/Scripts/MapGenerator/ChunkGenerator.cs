@@ -73,12 +73,12 @@ public class ChunkGenerator : MonoBehaviour
     private int GetChunkWithoutLever()
     {
         var chunks = new List<Chunk>();
-        foreach (var chunk in _spawnedChunk.Where(t => t.SpawnedLeaver == false))
+        foreach (var chunk in _spawnedChunk.Where(t => t.spawnedLever == false))
         {
             chunks.Add(chunk);
         }
         var returnChunk = Random.Range(0, chunks.Count);
-        _spawnedChunk[returnChunk].SpawnedLeaver = true;
+        _spawnedChunk[returnChunk].spawnedLever = true;
         return returnChunk;
     }
 
