@@ -1,5 +1,4 @@
 ﻿using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView), typeof(Collider), typeof(Rigidbody))]
@@ -42,7 +41,7 @@ public class Key : MonoBehaviourPunCallbacks
     {
         if (keyUnlock == false) return;
         keyUnlock = false;
-        _keyManager.PhotonViewMain.RPC("DestroyGameObject", RpcTarget.All, _photonView.ViewID);
+        _keyManager.PhotonViewMain.RPC(RPCEventType.DestroyGameObject, RpcTarget.All, _photonView.ViewID);
         _playerStatistics.AddFoundKey();
     }
 }

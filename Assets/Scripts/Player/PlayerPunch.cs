@@ -1,22 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController), typeof(PhotonView))]
 public class PlayerPunch : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Transform punchTranform;
+    [SerializeField] private Transform punchTransform;
     [SerializeField] private float maxDistance = 1f;
     [SerializeField] private float kickStrength = 3f;
     private PhotonView photonViewMain;
 
     private bool _punched;
     private CharacterController character;
-    private Vector3 impact = Vector3.zero;
+    private Vector3 _impact = Vector3.zero;
 
+    public void Initialize(Transform punchTransform)
+    {
+        this.punchTransform = punchTransform;
+    }
+    
     private void Awake()
     {
         character = GetComponent<CharacterController>();
@@ -25,23 +26,20 @@ public class PlayerPunch : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        impact = new Vector3(impact.x, 0, impact.z);
-        if (impact.magnitude > 0.2) character.Move(impact * Time.deltaTime);
-        impact = Vector3.Lerp(impact, Vector3.zero, 5 * Time.deltaTime);
+        _impact = new Vector3(_impact.x, 0, _impact.z);
+        if (_impact.magnitude > 0.2) character.Move(_impact * Time.deltaTime);
+        _impact = Vector3.Lerp(_impact, Vector3.zero, 5 * Time.deltaTime);
     }
 
     public void Punch()
     {
-        RaycastHit raycastHit;
-        if (Physics.Raycast(punchTranform.position, punchTranform.forward, out raycastHit, maxDistance))
-            // TODO: if (Physics.Raycast(punchTranform.position, punchTranform.forward, out RaycastHit raycastHit,maxDistance))
+        if (Physics.Raycast(punchTransform.position, punchTransform.forward, out RaycastHit raycastHit,maxDistance))
         {
             var constructor = raycastHit.transform.GetComponent<PlayerConstructor>();
             if (constructor)
             {
                 var i = constructor.PlayerPunch;
-                // TODO: move string references to enum
-                i.photonViewMain.RPC("GetPunch", RpcTarget.All, raycastHit.point, kickStrength);
+                i.photonViewMain.RPC(RPCEventType.GetPunch, RpcTarget.All, raycastHit.point, kickStrength);
             }
         }
     }
@@ -51,6 +49,6 @@ public class PlayerPunch : MonoBehaviourPunCallbacks
     {
         var dir = (transform.position - point).normalized;
         if (dir.y < 0) dir.y = -dir.y;
-        impact += dir.normalized * kickStrength;
+        _impact += dir.normalized * kickStrength;
     }
 }

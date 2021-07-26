@@ -1,39 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Movenment : MonoBehaviour
 {
     [SerializeField] private float speed = 3f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private float gravity = 20f;
-    [SerializeField] private CharacterController control;
-    [SerializeField] private Transform rotateGameObject;
-    
+
     private PhotonView _photonView;
+    private Transform _rotateGameObject;
     private InputHandler _inputHandler;
-    private bool _isGround = false;
+    private bool _isGround;
     private Vector3 _moveDir = Vector3.zero;
     private float _speedBoost = 0f;
-    private Rigidbody _rigidbody;
+    private CharacterController _control;
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-        control = GetComponent<CharacterController>();
+        _control = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        _isGround = control.isGrounded;
+        _isGround = _control.isGrounded;
         Move();
     }
 
-    public void Initialize(InputHandler inputHandler)
+    public void Initialize(InputHandler inputHandler,Transform rotateTransform)
     {
         _inputHandler = inputHandler;
+        _rotateGameObject = rotateTransform;
     }
 
     private void Move()
@@ -52,9 +48,9 @@ public class Movenment : MonoBehaviour
         {
             var i = new Vector3(0,
                 Mathf.Atan2(_inputHandler.MoveDirection().x, _inputHandler.MoveDirection().y) * 180 / Mathf.PI, 0);
-            rotateGameObject.rotation = Quaternion.Lerp(rotateGameObject.rotation, Quaternion.Euler(i), Time.deltaTime * 4.0f);
+            _rotateGameObject.rotation = Quaternion.Lerp(_rotateGameObject.rotation, Quaternion.Euler(i), Time.deltaTime * 4.0f);
         }
         _moveDir.y -= gravity * Time.deltaTime;
-        control.Move(_moveDir * Time.deltaTime);
+        _control.Move(_moveDir * Time.deltaTime);
     }
 }

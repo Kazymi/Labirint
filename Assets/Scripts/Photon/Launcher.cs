@@ -1,58 +1,24 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using TMPro;
 using Photon.Realtime;
 using System.Linq;
-using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-	// TODO: Singleton
-	public static Launcher Instance;
-
-	// TODO: break it into separate scripts
-	[SerializeField] TMP_InputField roomNameInputField;
-	[SerializeField] TMP_Text errorText;
-	[SerializeField] TMP_Text roomNameText;
 	[SerializeField] Transform roomListContent;
 	[SerializeField] GameObject roomListItemPrefab;
 	[SerializeField] Transform playerListContent;
-	[SerializeField] GameObject PlayerListItemPrefab;
+	[SerializeField] GameObject playerListItemPrefab;
 	[SerializeField] GameObject startGameButton;
 
-	[SerializeField] private Button createRoomButton;
-	[SerializeField] private Button leaveRoomButton;
-	[SerializeField] private Button startGameRoomButton;
+	public static Launcher Instance;
+	private LauncherMenu _launcherMenu;
 
-
-	[SerializeField] private MenuManager menuManager;
-	[SerializeField] private Menu titleMenu;
-	[SerializeField] private Menu loadMenu;
-	[SerializeField] private Menu errorMenu;
-	[SerializeField] private Menu roomMenu;
-	
 	private void Awake()
 	{
 		Instance = this;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		createRoomButton.onClick.AddListener(CreateRoom);
-		leaveRoomButton.onClick.AddListener(LeaveRoom);
-		startGameRoomButton.onClick.AddListener(StartGame);
-	}
-	
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		createRoomButton.onClick.RemoveListener(CreateRoom);
-		leaveRoomButton.onClick.RemoveListener(LeaveRoom);
-		startGameRoomButton.onClick.RemoveListener(StartGame);
 	}
 
 	private void Start()
@@ -61,6 +27,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 		ServiceLocator.Initialize();
 	}
 
+	public void Initialize(LauncherMenu launcherMenu)
+	{
+		_launcherMenu = launcherMenu;
+	}
+	
 	public override void OnConnectedToMaster()
 	{
 		Debug.Log("Connected to Master");
@@ -70,25 +41,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedLobby()
 	{
-		menuManager.OpenMenu(titleMenu);
+		_launcherMenu.OnJoinedLobby();
 	}
 
-	public void CreateRoom()
+	public void CreateRoom(string nameRoom)
 	{
-		if(string.IsNullOrEmpty(roomNameInputField.text))
-		{
-			return;
-		}
-		// TODO: as an option Facade pattern can be implemented for the whole networking system
-		PhotonNetwork.CreateRoom(roomNameInputField.text);
-		menuManager.OpenMenu(loadMenu);
+		PhotonNetwork.CreateRoom(nameRoom);
 	}
 
 	public override void OnJoinedRoom()
 	{
-		menuManager.OpenMenu(roomMenu);
-		roomNameText.text = PhotonNetwork.CurrentRoom.Name;
-
 		Player[] players = PhotonNetwork.PlayerList;
 
 		foreach(Transform child in playerListContent)
@@ -98,10 +60,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 		for(int i = 0; i < players.Count(); i++)
 		{
-			Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+			Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
 		}
 
 		startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+		_launcherMenu.OnJoinedRoom(PhotonNetwork.CurrentRoom.Name);
 	}
 
 	public override void OnMasterClientSwitched(Player newMasterClient)
@@ -111,9 +74,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 	public override void OnCreateRoomFailed(short returnCode, string message)
 	{
-		errorText.text = "Room Creation Failed: " + message;
-		Debug.LogError("Room Creation Failed: " + message);
-		menuManager.OpenMenu(errorMenu);
+		_launcherMenu.OnJoinedRoomError(message);
 	}
 
 	public void StartGame()
@@ -124,18 +85,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 	public void LeaveRoom()
 	{
 		PhotonNetwork.LeaveRoom();
-		menuManager.OpenMenu(loadMenu);
+		_launcherMenu.Load();
 	}
 
 	public void JoinRoom(RoomInfo info)
 	{
 		PhotonNetwork.JoinRoom(info.Name);
-		menuManager.OpenMenu(loadMenu);
+		_launcherMenu.Load();
 	}
 
 	public override void OnLeftRoom()
 	{
-		menuManager.OpenMenu(titleMenu);
+		_launcherMenu.OnRoomLeft();
 	}
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -155,6 +116,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
-		Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+		Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
 	}
 }

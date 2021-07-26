@@ -1,7 +1,5 @@
-using System;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SeedGenerator : MonoBehaviourPunCallbacks
@@ -26,18 +24,18 @@ public class SeedGenerator : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             int seed = Random.Range(100000, 999999);
-            photonView.RPC("SeedGenerated", RpcTarget.All, seed);
+            photonView.RPC(RPCEventType.SeedGenerated, RpcTarget.All, seed);
         }
         else
         {
-            photonView.RPC("GetSeed", RpcTarget.MasterClient,photonView.Controller);
+            photonView.RPC(RPCEventType.GetSeed, RpcTarget.MasterClient,photonView.Controller);
         }
     }
 
     [PunRPC]
     public void GetSeed(Player player)
     {
-        photonView.RPC("SeedGenerated",player,_seed);
+        photonView.RPC(RPCEventType.SeedGenerated,player,_seed);
     }
 
     [PunRPC]

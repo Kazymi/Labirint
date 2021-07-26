@@ -1,32 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-    //TODO: weird canvas structure
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] Menu[] menus;
+    [SerializeField] Canvas[] menus;
 
-    public void OpenMenu(Menu menuToOpen)
+    public void OpenMenu(Canvas menuToOpen)
     {
-        // TODO: can remove Menu class and just use Canvas. 
-        /*foreach (var menu in menus)
+        foreach (var menu in menus)
         {
-            menu.Close();
-        }*/
-        for (int i = 0; i < menus.Length; i++)
-        {
-            if (menus[i].Open)
-            {
-                CloseMenu(menus[i]);
-            }
+            menu.enabled = false;
         }
-        menuToOpen.OpenCanvas();
-    }
-
-    private void CloseMenu(Menu menu)
-    {
-        menu.Close();
+        menuToOpen.enabled = true;
     }
 }

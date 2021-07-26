@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +5,7 @@ using Photon.Pun;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ChunkGenerator : MonoBehaviour
+public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
 {
     [SerializeField] private ChunkConfiguration chunkConfiguration;
     [SerializeField] private Chunk[] generateChunks;
@@ -19,17 +18,20 @@ public class ChunkGenerator : MonoBehaviour
     private TrapManager _trapManager;
     private Chunk[,] _spawnedChunkPositions;
     private List<Chunk> _spawnedChunk = new List<Chunk>();
+    public bool PreloadingCompleted { get; set; }
 
     public List<Chunk> SpawnedChunk => _spawnedChunk;
 
     private void OnEnable()
     {
         ServiceLocator.Subscribe<ChunkGenerator>(this);
+        Preloading.Subscribe(this);
     }
 
     private void OnDisable()
     {
         ServiceLocator.Unsubscribe<ChunkGenerator>();
+        Preloading.Unsubscribe(this);
     }
 
     public IEnumerator StartGenerate()
@@ -57,6 +59,8 @@ public class ChunkGenerator : MonoBehaviour
             ServiceLocator.GetService<KeyManager>().Initialize(this);
         }
         GenerateDecor();
+        PreloadingCompleted = true;
+        Preloading.CheckPreloading();
     }
     public void GenerateLeverTrap(int seed)
     {
@@ -66,7 +70,7 @@ public class ChunkGenerator : MonoBehaviour
             var chunk = _spawnedChunk[idChunk];
             var positionLeaver = chunk.PointsLever[Random.Range(0, chunk.PointsLever.Count)];
             var leaver = PhotonNetwork.Instantiate(chunk.Lever.name, positionLeaver.position, positionLeaver.rotation);
-            leaver.GetComponent<PhotonView>().RPC("Initialize",RpcTarget.All,idChunk,seed);
+            leaver.GetComponent<PhotonView>().RPC(RPCEventType.LeverInitialize,RpcTarget.All,idChunk,seed);
         }
     }
 
@@ -128,7 +132,7 @@ public class ChunkGenerator : MonoBehaviour
                     if (i != null)
                     {
                         i.PhotonView = newTrap.GetComponent<PhotonView>();
-                        i.PhotonView.RPC("SetPosition", RpcTarget.All,
+                        i.PhotonView.RPC(RPCEventType.TrapSettingSetPosition, RpcTarget.All,
                             spawnTransform.position,
                             spawnTransform.rotation);
                     }

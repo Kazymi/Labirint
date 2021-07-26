@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &6452227372241515815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440637197718832726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff42acc25074b94bb7827d712477ad3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7523657120742381909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,15 +210,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8764212989323483855}
   - component: {fileID: 8764212989323483852}
-  - component: {fileID: 8764212989323483843}
   - component: {fileID: 8764212989323483842}
   - component: {fileID: 8764212989323483848}
   - component: {fileID: 1285176672482525404}
   - component: {fileID: 7202062888518840985}
-  - component: {fileID: 6649614691413549634}
-  - component: {fileID: 6618674264993048881}
   - component: {fileID: 8415855737931614389}
-  - component: {fileID: 1150555537288900477}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -268,23 +252,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &8764212989323483843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8764212989323483841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63af13c4db311064d95ce98cdc5374ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
-  jumpForce: 6
-  gravity: 20
-  control: {fileID: 8764212989323483842}
-  rotateGameObject: {fileID: 7306611852234988493}
 --- !u!143 &8764212989323483842
 CharacterController:
   m_ObjectHideFlags: 0
@@ -315,13 +282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e03cf4927fbc4a3d999c53bb40c278cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movenment: {fileID: 8764212989323483843}
+  animator: {fileID: 1440637197726234008}
+  punchPosition: {fileID: 6646480905210005481}
+  rotateTransform: {fileID: 7306611852234988493}
   camera: {fileID: 8764212987571676213}
-  animationControl: {fileID: 6452227372241515815}
-  playerTrigger: {fileID: 6649614691413549634}
-  playerHealth: {fileID: 6618674264993048881}
-  playerStatistics: {fileID: 8415855737931614389}
-  playerPunch: {fileID: 1150555537288900477}
 --- !u!114 &1285176672482525404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,32 +327,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &6649614691413549634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8764212989323483841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 713bf15bce734fdcbe8abddc754fef69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerRadius: 2
-  cooldown: 2
---- !u!114 &6618674264993048881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8764212989323483841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 892e82abad3a43e4979e115b9b5db957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8415855737931614389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,22 +339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d35eb578344c868a06ae3985e3b7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1150555537288900477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8764212989323483841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 781f0a7604484ef18c154c00c9c65f4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  punchTranform: {fileID: 6646480905210005481}
-  cooldown: 1
-  maxDistance: 1
-  kickStrength: 3
 --- !u!1 &8965364909247047593
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,5 +518,10 @@ GameObject:
 --- !u!4 &1440637197718477430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400014, guid: 02dd6406ed1ebc248b2fafd0485e0de9, type: 3}
+  m_PrefabInstance: {fileID: 1440637197718864120}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1440637197726234008 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: 02dd6406ed1ebc248b2fafd0485e0de9, type: 3}
   m_PrefabInstance: {fileID: 1440637197718864120}
   m_PrefabAsset: {fileID: 0}

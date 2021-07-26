@@ -3,11 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class AnimationControl : MonoBehaviour
 {
+    private int test = Animator.StringToHash("Speed");
     private const string _animationSpeedName = "Speed";
     private const string _animationDieName = "Die";
-    private Animator _animator;
     private InputHandler _inputHandler;
     private bool _alive = true;
+    private Animator _animator;
 
     private void Awake()
     {
@@ -20,8 +21,9 @@ public class AnimationControl : MonoBehaviour
             _animator.SetFloat(_animationSpeedName, _inputHandler.MoveDirection().magnitude);
     }
 
-    public void Initialized(InputHandler inputHandler)
+    public void Initialized(InputHandler inputHandler,Animator animator)
     {
+        _animator = animator;
         _inputHandler = inputHandler;
     }
 

@@ -4,39 +4,33 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 public class PlayerConstructor : MonoBehaviour
 {
-    [SerializeField] private Movenment movenment;
-    // TODO: make separate behaviour for camera instead of just chaining it on Player GameObject
-    [SerializeField] private GameObject camera;
-    [SerializeField] private AnimationControl animationControl;
-    [SerializeField] private PlayerTrigger playerTrigger;
-    [SerializeField] private PlayerHealth playerHealth;
-    [SerializeField] private PlayerStatistics playerStatistics;
-    [SerializeField] private PlayerPunch playerPunch;
 
-    public PlayerPunch PlayerPunch => playerPunch;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform punchPosition;
+    [SerializeField] private Transform rotateTransform;
+    [SerializeField] private GameObject camera;
+    
+    private PlayerPunch _playerPunch;
+    private PlayerTrigger _playerTrigger;
+    private AnimationControl _animationControl;
+    private Movenment _movenment;
+    public PlayerPunch PlayerPunch => _playerPunch;
 
     private void Start()
     {
         var pv = GetComponent<PhotonView>();
+        var inputHandler = ServiceLocator.GetService<InputHandler>();
+        _playerPunch = punchPosition.gameObject.AddComponent<PlayerPunch>();
+        _playerPunch.Initialize(punchPosition);
         if (pv.IsMine)
         {
-            var inputHandler = ServiceLocator.GetService<InputHandler>();
-            var gameManager = ServiceLocator.GetService<GameManager>();
-            movenment.Initialize(inputHandler);
-            animationControl.Initialized(inputHandler);
-            inputHandler.Initialize(playerTrigger, playerPunch, movenment);
-            playerHealth.Initialize(movenment, animationControl);
-            playerStatistics.Initialize(gameManager);
-        }
-        else
-        {
-            // TODO: you can add component in runtime instead of destroying unnecessary ones
-            Destroy(playerStatistics);
-            Destroy(movenment);
-            Destroy(camera);
-            Destroy(animationControl);
-            Destroy(playerTrigger);
-            Destroy(playerHealth);
-        }
+            _animationControl = gameObject.AddComponent<AnimationControl>();
+            _animationControl.Initialized(inputHandler,animator);
+            _movenment = gameObject.AddComponent<Movenment>();
+            _movenment.Initialize(inputHandler,rotateTransform);
+            _playerTrigger = gameObject.AddComponent<PlayerTrigger>();
+            inputHandler.Initialize(_playerTrigger,_playerPunch,_movenment);
+            gameObject.AddComponent<PlayerHealth>().Initialize(_movenment,_animationControl);
+        } else Destroy(camera);
     }
 }

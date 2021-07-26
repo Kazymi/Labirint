@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class TrapTrigger : MonoBehaviourPunCallbacks

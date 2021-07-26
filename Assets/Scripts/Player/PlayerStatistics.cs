@@ -1,4 +1,3 @@
-using System;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -15,6 +14,7 @@ public class PlayerStatistics : MonoBehaviour
     private void Awake()
     {
         _photonView = GetComponent<PhotonView>();
+        if(_photonView.IsMine == false) Destroy(this);
     }
 
     private void Start()
@@ -22,6 +22,7 @@ public class PlayerStatistics : MonoBehaviour
         _gameStatisticMenu = ServiceLocator.GetService<GameStatisticMenu>();
         _foundedKeys = 0;
         _gameStatisticMenu.UpdateKeySlider(0);
+        _needToFindKeys = ServiceLocator.GetService<GameManager>().NeedToFindKeys;
     }
 
     private void OnEnable()
@@ -34,11 +35,6 @@ public class PlayerStatistics : MonoBehaviour
     {
         if (_photonView.IsMine)
             ServiceLocator.Unsubscribe<PlayerStatistics>();
-    }
-
-    public void Initialize(GameManager gameManager)
-    {
-        _needToFindKeys = gameManager.NeedToFindKeys;
     }
 
     public void AddFoundKey()

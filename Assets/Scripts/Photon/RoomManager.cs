@@ -37,8 +37,6 @@ public class RoomManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
-
-        // TODO: use parentheses even if it's only one lines
         if (eventCode != (int)EventType.PlayerFindAllKeys)
         {
             return;
