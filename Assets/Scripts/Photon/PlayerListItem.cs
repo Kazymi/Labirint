@@ -5,25 +5,26 @@ using UnityEngine;
 
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
-	[SerializeField] TMP_Text text;
-	Player player;
+    [SerializeField] TMP_Text text;
 
-	public void SetUp(Player _player)
-	{
-		player = _player;
-		text.text = _player.NickName;
-	}
+    private Player _player;
 
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		if(player == otherPlayer)
-		{
-			Destroy(gameObject);
-		}
-	}
+    public void SetUp(Player player)
+    {
+        _player = player;
+        text.text = player.NickName;
+    }
 
-	public override void OnLeftRoom()
-	{
-		Destroy(gameObject);
-	}
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (_player == otherPlayer)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        Destroy(gameObject);
+    }
 }

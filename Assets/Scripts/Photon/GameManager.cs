@@ -10,8 +10,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] private int needToFindKeys = 3;
 
+    // TODO: unused
     private PhotonView _photonView;
+    // TODO: unused
     private bool _gameFineshed;
+    
     public int NeedToFindKeys => needToFindKeys;
 
     public override void OnEnable()
@@ -34,17 +37,20 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void OnEvent(EventData photonEvent)
     {
         var eventCode = photonEvent.Code;
-        if (eventCode != (int) EventType.PlayerFindAllKeys) return;
+        if (eventCode != (int)EventType.PlayerFindAllKeys)
+        {
+            return;
+        }
         PlayerWin();
     }
-    
+
     private void PlayerWin()
     {
         _gameFineshed = true;
-        StartCoroutine(Disconect());
+        StartCoroutine(Disconnect());
     }
 
-    private IEnumerator Disconect()
+    private IEnumerator Disconnect()
     {
         yield return new WaitForSeconds(7f);
         PhotonNetwork.LeaveRoom();

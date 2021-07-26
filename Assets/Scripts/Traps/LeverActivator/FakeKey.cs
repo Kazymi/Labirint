@@ -12,8 +12,8 @@ public class FakeKey : LeaverActivator
 
     private void OnTriggerEnter(Collider other)
     {
-        var i = other.GetComponent<PlayerConstructor>();
-        if (i)
+        var playerConstructor = other.GetComponent<PlayerConstructor>();
+        if (playerConstructor)
         {
             explosionEffect.SetActive(true);
         }

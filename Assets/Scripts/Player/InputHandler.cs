@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    [SerializeField] private Joystick _playerJoystick;
+    [SerializeField] private Joystick playerJoystick;
     [SerializeField] private bool mobile;
-    
+
     private PlayerTrigger _playerTrigger;
     private PlayerPunch _playerPunch;
-    private Movenment _movenment;
+    private Movenment _movement;
     private bool _paused;
     private GameMenu _gameMenu;
-    
+
     private void OnEnable()
     {
         ServiceLocator.Subscribe<InputHandler>(this);
@@ -30,6 +30,7 @@ public class InputHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            // TODO: it's not InputHandler responsibility to activate action. It should raise event and whoever interested can listen
             _playerTrigger.OnClick();
         }
         if (Input.GetMouseButtonDown(1))
@@ -40,26 +41,25 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             _paused = !_paused;
-            _movenment.enabled = !_paused;
+            _movement.enabled = !_paused;
             _gameMenu.Paused(_paused);
         }
     }
-    
-    public void Initialize(PlayerTrigger playerTrigger,PlayerPunch playerPunch, Movenment movenment)
+
+    public void Initialize(PlayerTrigger playerTrigger, PlayerPunch playerPunch, Movenment movenment)
     {
         _playerPunch = playerPunch;
         _playerTrigger = playerTrigger;
-        _movenment = movenment;
+        _movement = movenment;
     }
+
     public Vector2 MoveDirection()
     {
         if (mobile)
         {
-            return -_playerJoystick.Direction;
+            return -playerJoystick.Direction;
         }
-        else
-        {
-            return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        }
+
+        return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
 }

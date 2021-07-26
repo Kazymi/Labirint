@@ -4,15 +4,15 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-	[SerializeField] private List<Transform> _spawnpoints;
+    [SerializeField] private List<Transform> spawnpoints;
 
-	private void Awake()
-	{
-		ServiceLocator.Subscribe<SpawnManager>(this);
-	}
+    private void Awake()
+    {
+        ServiceLocator.Subscribe<SpawnManager>(this);
+    }
 
-	public Transform GetSpawnPoint()
-	{
-		return _spawnpoints[Random.Range(0, _spawnpoints.Count)].transform;
-	}
+    public Transform GetSpawnPoint()
+    {
+        return spawnpoints[Random.Range(0, spawnpoints.Count)].transform;
+    }
 }

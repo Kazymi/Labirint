@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView), typeof(Collider), typeof(Rigidbody))]
 public class Key : MonoBehaviourPunCallbacks
 {
-
     private KeyManager _keyManager;
     private PhotonView _photonView;
     private PlayerStatistics _playerStatistics;
