@@ -1,27 +1,47 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController), typeof(PhotonView))]
-public class PlayerPunch : MonoBehaviourPunCallbacks
+public class PlayerPunch : MonoBehaviour
 {
     [SerializeField] private Transform punchTransform;
     [SerializeField] private float maxDistance = 1f;
     [SerializeField] private float kickStrength = 3f;
+
     private PhotonView photonViewMain;
 
     private bool _punched;
     private CharacterController character;
     private Vector3 _impact = Vector3.zero;
+    private InputHandler _inputHandler;
 
-    public void Initialize(Transform punchTransform)
+    private void OnEnable()
     {
-        this.punchTransform = punchTransform;
+        if (_inputHandler != null)
+        {
+            _inputHandler.PunchAction += Punch;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (_inputHandler != null)
+        {
+            _inputHandler.PunchAction -= Punch;
+        }
     }
     
     private void Awake()
     {
         character = GetComponent<CharacterController>();
         photonViewMain = GetComponent<PhotonView>();
+    }
+
+    private void Start()
+    {
+        _inputHandler = ServiceLocator.GetService<InputHandler>();
+        _inputHandler.PunchAction += Punch;
     }
 
     private void Update()
@@ -33,7 +53,7 @@ public class PlayerPunch : MonoBehaviourPunCallbacks
 
     public void Punch()
     {
-        if (Physics.Raycast(punchTransform.position, punchTransform.forward, out RaycastHit raycastHit,maxDistance))
+        if (Physics.Raycast(punchTransform.position, punchTransform.forward, out RaycastHit raycastHit, maxDistance))
         {
             var constructor = raycastHit.transform.GetComponent<PlayerConstructor>();
             if (constructor)

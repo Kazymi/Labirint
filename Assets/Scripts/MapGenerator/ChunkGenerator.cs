@@ -47,12 +47,12 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
         Preloading.CheckPreloading();
     }
     
-    public IEnumerator StartGenerate()
+    public IEnumerator Start()
     {
         if (PhotonNetwork.IsMasterClient == false) yield break;
         _trapManager = ServiceLocator.GetService<TrapManager>();
         _spawnedChunkPositions = new Chunk[countChunk, countChunk];
-        _spawnedChunkPositions[0, 0] = mainChunk;
+        _spawnedChunkPositions[5, 5] = mainChunk;
 
         _maxX = _spawnedChunkPositions.GetLength(0) - 1;
         _maxY = _spawnedChunkPositions.GetLength(1) - 1;
@@ -140,7 +140,7 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
                     if (i != null)
                     {
                         i.PhotonView = newTrap.GetComponent<PhotonView>();
-                        i.PhotonView.RPC(RPCEventType.TrapSettingSetPosition, RpcTarget.All,
+                        i.PhotonView.RPC(RPCEventType.SetPosition, RpcTarget.All,
                             spawnTransform.position,
                             spawnTransform.rotation);
                     }

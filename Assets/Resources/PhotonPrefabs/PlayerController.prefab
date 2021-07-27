@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 1285176672482525404}
   - component: {fileID: 7202062888518840985}
   - component: {fileID: 8415855737931614389}
+  - component: {fileID: 2297785915848054115}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -283,7 +284,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1440637197726234008}
-  punchPosition: {fileID: 6646480905210005481}
   rotateTransform: {fileID: 7306611852234988493}
   camera: {fileID: 8764212987571676213}
 --- !u!114 &1285176672482525404
@@ -339,6 +339,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d35eb578344c868a06ae3985e3b7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2297785915848054115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8764212989323483841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781f0a7604484ef18c154c00c9c65f4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchTransform: {fileID: 6646480905210005481}
+  maxDistance: 1
+  kickStrength: 50
 --- !u!1 &8965364909247047593
 GameObject:
   m_ObjectHideFlags: 0

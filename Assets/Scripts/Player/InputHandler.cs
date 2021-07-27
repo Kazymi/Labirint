@@ -1,15 +1,32 @@
+using System;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private Joystick _playerJoystick;
     [SerializeField] private bool mobile;
+
+    private event Action _interactionAction;
+    private event Action _punchAction;
+    private event Action _pausedAction;
     
-    private PlayerTrigger _playerTrigger;
-    private PlayerPunch _playerPunch;
-    private Movenment _movenment;
-    private bool _paused;
-    private GameMenu _gameMenu;
+    public event Action InteractionAction
+    {
+        add => _interactionAction += value;
+        remove => _interactionAction -= value;
+    }
+    
+    public event Action PunchAction
+    {
+        add => _punchAction += value;
+        remove => _punchAction -= value;
+    }
+
+    public event Action PausedAction
+    {
+        add => _pausedAction += value;
+        remove => _pausedAction -= value;
+    }
     
     private void OnEnable()
     {
@@ -21,36 +38,24 @@ public class InputHandler : MonoBehaviour
         ServiceLocator.Unsubscribe<InputHandler>();
     }
 
-    private void Start()
-    {
-        _gameMenu = ServiceLocator.GetService<GameMenu>();
-    }
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _playerTrigger.OnClick();
+          _interactionAction?.Invoke();
         }
+
         if (Input.GetMouseButtonDown(1))
         {
-            _playerPunch.Punch();
+            _punchAction?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            _paused = !_paused;
-            _movenment.enabled = !_paused;
-            _gameMenu.Paused(_paused);
+            _pausedAction?.Invoke();
         }
     }
-    
-    public void Initialize(PlayerTrigger playerTrigger,PlayerPunch playerPunch, Movenment movenment)
-    {
-        _playerPunch = playerPunch;
-        _playerTrigger = playerTrigger;
-        _movenment = movenment;
-    }
+
     public Vector2 MoveDirection()
     {
         if (mobile)

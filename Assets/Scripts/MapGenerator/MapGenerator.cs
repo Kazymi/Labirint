@@ -15,8 +15,12 @@ public class MapGenerator : MonoBehaviour
 
     private IEnumerator GetSeed()
     {
-        yield return new WaitForSeconds(2f);
-        chunkGenerator.StartCoroutine(chunkGenerator.StartGenerate());
-        keyManager.StartKeyManager();
+        yield return new WaitForSeconds(5f);
+        if (Preloading.Preloaded == false)
+        {
+            PhotonNetwork.LeaveRoom();
+            SceneManager.LoadScene(0);
+            yield break;
+        }
     }
 }

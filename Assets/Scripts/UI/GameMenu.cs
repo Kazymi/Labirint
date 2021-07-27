@@ -16,14 +16,21 @@ public class GameMenu : MonoBehaviour,IOnEventCallback
     [SerializeField] private Button disconnectButton;
 
     private bool _finishedGame;
-
+    private bool _paused;
+    private InputHandler _inputHandler;
     private void Start()
     {
         finishGameText.transform.localScale = Vector3.zero;
+        _inputHandler = ServiceLocator.GetService<InputHandler>();
+        _inputHandler.PausedAction += Paused;
     }
 
     private void OnEnable()
     {
+        if (_inputHandler != null)
+        {
+            _inputHandler.PausedAction += Paused;
+        }
         PhotonNetwork.AddCallbackTarget(this);
         disconnectButton.onClick.AddListener(Disconnect);
         ServiceLocator.Subscribe<GameMenu>(this);
@@ -31,6 +38,10 @@ public class GameMenu : MonoBehaviour,IOnEventCallback
 
     private void OnDisable()
     {
+        if (_inputHandler != null)
+        {
+            _inputHandler.PausedAction -= Paused;
+        }
         PhotonNetwork.RemoveCallbackTarget(this);
         disconnectButton.onClick.RemoveListener(Disconnect);
         ServiceLocator.Unsubscribe<GameMenu>();
@@ -48,11 +59,12 @@ public class GameMenu : MonoBehaviour,IOnEventCallback
         finishGameText.text = (string) data[0] +" WIN";
     }
 
-    public void Paused(bool paused)
+    public void Paused()
     {
-        if(finishGameText) return;
-        gameCanvas.enabled = !paused;
-        pausedCanvas.enabled = paused;
+        if(_finishedGame) return;
+        _paused = !_paused;
+        gameCanvas.enabled = !_paused;
+        pausedCanvas.enabled = _paused;
     }
 
     private void Disconnect()
