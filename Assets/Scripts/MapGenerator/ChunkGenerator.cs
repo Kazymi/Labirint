@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,14 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
     private TrapManager _trapManager;
     private Chunk[,] _spawnedChunkPositions;
     private List<Chunk> _spawnedChunk = new List<Chunk>();
+    private PhotonView _photonView;
     public bool PreloadingCompleted { get; set; }
-
     public List<Chunk> SpawnedChunk => _spawnedChunk;
+
+    private void Awake()
+    {
+        _photonView = GetComponent<PhotonView>();
+    }
 
     private void OnEnable()
     {
@@ -34,11 +40,16 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
         Preloading.Unsubscribe(this);
     }
 
+    [PunRPC]
+    public void PreloadingFinish()
+    {
+        PreloadingCompleted = true;
+        Preloading.CheckPreloading();
+    }
+    
     public IEnumerator StartGenerate()
     {
-        var seed = ServiceLocator.GetService<SeedGenerator>().Seed;
-        Random.InitState(seed);
-        Debug.LogError(seed);
+        if (PhotonNetwork.IsMasterClient == false) yield break;
         _trapManager = ServiceLocator.GetService<TrapManager>();
         _spawnedChunkPositions = new Chunk[countChunk, countChunk];
         _spawnedChunkPositions[0, 0] = mainChunk;
@@ -51,27 +62,11 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
             yield return new WaitForSeconds(0.1f);
             PlaceSpawnRoom();
         }
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            GenerateTrap(seed);
-            GenerateLeverTrap(seed);
-            ServiceLocator.GetService<KeyManager>().Initialize(this);
-        }
+        GenerateTrap();
+        GenerateLeverTrap();
+        ServiceLocator.GetService<KeyManager>().Initialize(this);
         GenerateDecor();
-        PreloadingCompleted = true;
-        Preloading.CheckPreloading();
-    }
-    public void GenerateLeverTrap(int seed)
-    {
-        for (int i = 0; i != countLeavers; i++)
-        {
-            var idChunk = GetChunkWithoutLever();
-            var chunk = _spawnedChunk[idChunk];
-            var positionLeaver = chunk.PointsLever[Random.Range(0, chunk.PointsLever.Count)];
-            var leaver = PhotonNetwork.Instantiate(chunk.Lever.name, positionLeaver.position, positionLeaver.rotation);
-            leaver.GetComponent<PhotonView>().RPC(RPCEventType.LeverInitialize,RpcTarget.All,idChunk,seed);
-        }
+        _photonView.RPC(RPCEventType.PreloadingFinish,RpcTarget.All);
     }
 
     private int GetChunkWithoutLever()
@@ -90,12 +85,25 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
     {
         foreach (var chunk in _spawnedChunk)
         {
-            var newSeed = Random.Range(10000, 99999);
-            Random.InitState(newSeed);
-            chunk.GenerateDecor(newSeed);
+            var idDecor = Random.Range(0,chunk.CountDecor);
+            chunk.GetComponent<PhotonView>().RPC(RPCEventType.GenerateDecor,RpcTarget.All,idDecor);
         }
     }
-    private void GenerateTrap(int seed)
+    
+    private void GenerateLeverTrap()
+    {
+        for (int i = 0; i != countLeavers; i++)
+        {
+            var idChunk = GetChunkWithoutLever();
+            var chunk = _spawnedChunk[idChunk];
+            idChunk = chunk.GetComponent<PhotonView>().ViewID;
+            var positionLeaver = chunk.PointsLever[Random.Range(0, chunk.PointsLever.Count)];
+            var leaver = PhotonNetwork.Instantiate(chunk.Lever.name, positionLeaver.position, positionLeaver.rotation);
+            leaver.GetComponent<PhotonView>().RPC(RPCEventType.LeverInitialize,RpcTarget.All,idChunk);
+        }
+    }
+    
+    private void GenerateTrap()
     {
         var unlockedChunks = new List<Chunk>();
         foreach (var chunk in _spawnedChunk.Where(p => p.TrapUnlocked))
@@ -119,7 +127,7 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
                     Transform spawnTransform;
                     if (trap.TrapType == TrapType.DoorTrap)
                     {
-                        var posDoor = chunk.Doors.GetDoorTrapPosition(seed);
+                        var posDoor = chunk.Doors.GetDoorTrapPosition();
                         if (posDoor == null) continue;
                         spawnTransform = posDoor;
                     }
@@ -157,13 +165,12 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
             }
         }
 
-        Chunk newChunk = Instantiate(generateChunks[Random.Range(0, generateChunks.Length)]);
-
+        var newChunkName = generateChunks[Random.Range(0, generateChunks.Length)].name;
+        var newChunk = PhotonNetwork.Instantiate(newChunkName, Vector3.zero, Quaternion.identity).GetComponent<Chunk>();
         var limit = 500;
         while (limit-- > 0)
         {
             var position = vacantPlaces.ElementAt(Random.Range(0, vacantPlaces.Count));
-            newChunk.RotateRandomly();
             if (!ConnectToDoor(newChunk, position)) continue;
             newChunk.transform.position =
                 new Vector3(position.x - 5, 0, position.y - 5) * 10;
@@ -212,23 +219,23 @@ public class ChunkGenerator : MonoBehaviour,IPreloadingAComponent
 
         if (selectedDirection == Vector2Int.up)
         {
-            chunk.Doors.DoorUp.SetActive(false);
-            selectedRoom.Doors.DoorDown.SetActive(false);
+            chunk.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,chunk.Doors.DoorUp.name);
+            selectedRoom.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,selectedRoom.Doors.DoorDown.name);
         }
         else if (selectedDirection == Vector2Int.down)
         {
-            chunk.Doors.DoorDown.SetActive(false);
-            selectedRoom.Doors.DoorUp.SetActive(false);
+            chunk.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,chunk.Doors.DoorDown.name);
+            selectedRoom.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,selectedRoom.Doors.DoorUp.name);
         }
         else if (selectedDirection == Vector2Int.right)
         {
-            chunk.Doors.DoorRight.SetActive(false);
-            selectedRoom.Doors.DoorLeft.SetActive(false);
+            chunk.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,chunk.Doors.DoorRight.name);
+            selectedRoom.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,selectedRoom.Doors.DoorLeft.name);
         }
         else if (selectedDirection == Vector2Int.left)
         {
-            chunk.Doors.DoorLeft.SetActive(false);
-            selectedRoom.Doors.DoorRight.SetActive(false);
+            chunk.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,chunk.Doors.DoorLeft.name);
+            selectedRoom.GetComponent<PhotonView>().RPC(RPCEventType.OpenDoor,RpcTarget.All,selectedRoom.Doors.DoorRight.name);
         }
         return true;
     }

@@ -36,7 +36,6 @@ public class KeyManager : MonoBehaviourPunCallbacks
     public void StartKeyManager()
     {
         _photonView = GetComponent<PhotonView>();
-        Random.InitState(ServiceLocator.GetService<SeedGenerator>().Seed);
     }
 
     public Key GetRandomKey()

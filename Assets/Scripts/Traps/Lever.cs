@@ -18,6 +18,7 @@ public class Lever : MonoBehaviourPunCallbacks, ITrapSetting
 
     private const string _animationDownName = "Down";
     private const string _animationUpName = "Up";
+
     public PhotonView PhotonView
     {
         get => _photonView;
@@ -28,7 +29,7 @@ public class Lever : MonoBehaviourPunCallbacks, ITrapSetting
     {
         set => _listActivators = value;
     }
-    
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -41,17 +42,15 @@ public class Lever : MonoBehaviourPunCallbacks, ITrapSetting
     }
 
     [PunRPC]
-    public void Initialize(int idChunk,int seed)
+    public void Initialize(int idChunk)
     {
-        _listActivators = ServiceLocator.GetService<ChunkGenerator>().SpawnedChunk[idChunk].ListActivators;
-        Random.InitState(seed);
+        _listActivators = PhotonNetwork.GetPhotonView(idChunk).gameObject.GetComponent<Chunk>().ListActivators;
     }
+
     [PunRPC]
     public void Enable()
     {
         if (_activated) return;
-        var newSeed = Random.Range(10000, 99999);
-        Random.InitState(newSeed);
         _animator.Play(_animationDownName, 0, 0);
         _idCurrentActivator = Random.Range(0, _listActivators.Count);
         _listActivators[_idCurrentActivator].gameObject.SetActive(true);
@@ -64,10 +63,9 @@ public class Lever : MonoBehaviourPunCallbacks, ITrapSetting
     {
         _listActivators[_idCurrentActivator].Deactivate();
     }
-    
+
     public void SetPosition(Vector3 vector3, Quaternion quaternionSerializable)
     {
-        
     }
 
     private IEnumerator Deactivate()

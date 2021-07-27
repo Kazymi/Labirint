@@ -66,9 +66,8 @@ public class Doors
         set => doorRight = value;
     }
 
-    public Transform GetDoorTrapPosition(int seed)
+    public Transform GetDoorTrapPosition()
     {
-        Random.InitState(seed);
         var positions = new List<Transform>();
         if (doorDown.activeSelf == false) positions.Add(trapDoorPointDown);
         if (doorLeft.activeSelf == false) positions.Add(trapDoorPointLeft);
