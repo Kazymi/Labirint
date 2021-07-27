@@ -8,11 +8,11 @@ public class Key : MonoBehaviourPunCallbacks
     private KeyManager _keyManager;
     private PhotonView _photonView;
     private PlayerStatistics _playerStatistics;
-    private bool keyUnlock = true;
+    private bool _keyUnlock;
 
     public bool KeyUnlock
     {
-        set => keyUnlock = value;
+        set => _keyUnlock = value;
     }
 
     private void Start()
@@ -33,14 +33,15 @@ public class Key : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SetPosition(Vector3 pos, Quaternion rot)
     {
+        _keyUnlock = true;
         transform.position = pos;
         transform.rotation = rot;
     }
 
     private void Die()
     {
-        if (keyUnlock == false) return;
-        keyUnlock = false;
+        if (_keyUnlock == false) return;
+        _keyUnlock = false;
         _keyManager.PhotonViewMain.RPC(RPCEventType.DestroyGameObject, RpcTarget.All, _photonView.ViewID);
         _playerStatistics.AddFoundKey();
     }

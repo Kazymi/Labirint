@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -15,14 +16,21 @@ public class KeyManager : MonoBehaviourPunCallbacks
     private FactoryPhoton _factoryPhoton;
 
     public PhotonView PhotonViewMain => _photonView;
-    
+
+    private void Awake()
+    {
+        _photonView = GetComponent<PhotonView>();
+    }
+
     public override void OnEnable()
     {
+        base.OnEnable();
         ServiceLocator.Subscribe<KeyManager>(this);
     }
 
     public override void OnDisable()
     {
+        base.OnDisable();
         ServiceLocator.Unsubscribe<KeyManager>();
     }
     
@@ -33,21 +41,16 @@ public class KeyManager : MonoBehaviourPunCallbacks
         SetPositionKey(keys[idPhotonView],100);
     }
 
-    public void StartKeyManager()
+    [PunRPC]
+    public void MoveRandomKey(Vector3 position)
     {
-        _photonView = GetComponent<PhotonView>();
-    }
-
-    public Key GetRandomKey()
-    {
-        foreach (var VARIABLE in keys)
+        foreach (var key in keys)
         {
-            return VARIABLE.Value;
+            key.Value.photonView.RPC(RPCEventType.SetPosition,RpcTarget.All,position,Quaternion.identity);
+            break;
         }
-
-        return null;
     }
-    
+
     public void Initialize(ChunkGenerator chunkGenerator)
     {
         _chunkGenerator = chunkGenerator;

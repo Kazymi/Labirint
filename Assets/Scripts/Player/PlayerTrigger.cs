@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerTrigger : MonoBehaviour
 {
     [SerializeField] private float triggerRadius = 2f;
-    [SerializeField] private float cooldown=2f;
+    [SerializeField] private float cooldown = 2f;
 
     private bool _unlockTrigger = true;
     private InputHandler _inputHandler;
@@ -15,7 +15,7 @@ public class PlayerTrigger : MonoBehaviour
     {
         if (_inputHandler != null)
         {
-            _inputHandler.PunchAction += Punch;
+            _inputHandler.InteractionAction += Trigger;
         }
     }
 
@@ -23,19 +23,19 @@ public class PlayerTrigger : MonoBehaviour
     {
         if (_inputHandler != null)
         {
-            _inputHandler.PunchAction -= Punch;
+            _inputHandler.InteractionAction -= Trigger;
         }
     }
 
     private void Start()
     {
         _inputHandler = ServiceLocator.GetService<InputHandler>();
-        _inputHandler.PunchAction += Punch;
+        _inputHandler.InteractionAction += Trigger;
     }
 
-    private void Punch()
+    private void Trigger()
     {
-        if(_unlockTrigger == false) return;
+        if (_unlockTrigger == false) return;
         var allElement = Physics.OverlapSphere(transform.position, triggerRadius);
         foreach (var findElement in allElement.Where(t => t.GetComponent<ITrapSetting>() != null))
         {
@@ -51,5 +51,4 @@ public class PlayerTrigger : MonoBehaviour
         yield return new WaitForSeconds(cooldown);
         _unlockTrigger = true;
     }
-    
 }

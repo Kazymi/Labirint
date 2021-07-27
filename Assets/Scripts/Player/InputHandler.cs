@@ -1,11 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private Joystick _playerJoystick;
     [SerializeField] private bool mobile;
 
+    [SerializeField] private Button interactionButton;
+    [SerializeField] private Button punchButton;
+    [SerializeField] private Button pausedButton;
+    
     private event Action _interactionAction;
     private event Action _punchAction;
     private event Action _pausedAction;
@@ -31,11 +36,17 @@ public class InputHandler : MonoBehaviour
     private void OnEnable()
     {
         ServiceLocator.Subscribe<InputHandler>(this);
+        pausedButton?.onClick.AddListener(() => _pausedAction?.Invoke());
+        punchButton?.onClick.AddListener(() => _punchAction?.Invoke());
+        interactionButton?.onClick.AddListener(() => _interactionAction?.Invoke());
     }
 
     private void OnDisable()
     {
         ServiceLocator.Unsubscribe<InputHandler>();
+        pausedButton?.onClick.RemoveListener(() => _pausedAction?.Invoke());
+        punchButton?.onClick.RemoveListener(() => _punchAction?.Invoke());
+        interactionButton?.onClick.RemoveListener(() => _interactionAction?.Invoke());
     }
 
     private void Update()
