@@ -9,16 +9,16 @@ public class PlayerHealth : MonoBehaviour
     private AnimationControl _playerAnimator;
     private PhotonView _pv;
     private PlayerManager _playerManager;
-    private Movenment _movenment;
+    private Movement _movement;
     private void Start()
     {
         _pv = GetComponent<PhotonView>();
         _playerManager = PhotonView.Find((int)_pv.InstantiationData[0]).GetComponent<PlayerManager>();
     }
 
-    public void Initialize(Movenment movenment, AnimationControl animationControl)
+    public void Initialize(Movement movement, AnimationControl animationControl)
     {
-        _movenment = movenment;
+        _movement = movement;
         _playerAnimator = animationControl;
     }
     
@@ -29,7 +29,7 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator Die()
     {
-        Destroy(_movenment);
+        Destroy(_movement);
         _playerAnimator.Die();
         yield return new WaitForSeconds(4f);
         _playerManager.Die();

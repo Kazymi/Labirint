@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
-    [SerializeField] private Joystick _playerJoystick;
+    [SerializeField] private Joystick playerJoystick;
     [SerializeField] private bool mobile;
 
     [SerializeField] private Button interactionButton;
@@ -71,7 +72,7 @@ public class InputHandler : MonoBehaviour
     {
         if (mobile)
         {
-            return -_playerJoystick.Direction;
+            return -playerJoystick.Direction;
         }
         else
         {

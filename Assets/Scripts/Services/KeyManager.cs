@@ -37,7 +37,10 @@ public class KeyManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void DestroyGameObject(int idPhotonView)
     {
-        if(PhotonNetwork.IsMasterClient == false) return;
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            return;
+        }
         SetPositionKey(keys[idPhotonView],100);
     }
 
@@ -54,7 +57,10 @@ public class KeyManager : MonoBehaviourPunCallbacks
     public void Initialize(ChunkGenerator chunkGenerator)
     {
         _chunkGenerator = chunkGenerator;
-        if(PhotonNetwork.IsMasterClient == false) return;
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            return;
+        }
         _factoryPhoton = new FactoryPhoton(keysGameObjects.name, 0, transform);
         for (int i = 0; i != countKey; i++)
         {

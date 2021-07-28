@@ -35,7 +35,10 @@ public class PlayerTrigger : MonoBehaviour
 
     private void Trigger()
     {
-        if (_unlockTrigger == false) return;
+        if (_unlockTrigger == false)
+        {
+            return;
+        }
         var allElement = Physics.OverlapSphere(transform.position, triggerRadius);
         foreach (var findElement in allElement.Where(t => t.GetComponent<ITrapSetting>() != null))
         {

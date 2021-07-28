@@ -40,7 +40,10 @@ public class Key : MonoBehaviourPunCallbacks
 
     private void Die()
     {
-        if (_keyUnlock == false) return;
+        if (_keyUnlock == false)
+        {
+            return;
+        }
         _keyUnlock = false;
         _keyManager.PhotonViewMain.RPC(RPCEventType.DestroyGameObject, RpcTarget.All, _photonView.ViewID);
         _playerStatistics.AddFoundKey();

@@ -3,9 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class AnimationControl : MonoBehaviour
 {
-    private int test = Animator.StringToHash("Speed");
-    private const string _animationSpeedName = "Speed";
-    private const string _animationDieName = "Die";
+    private int _animationSpeedHash = Animator.StringToHash("Speed");
+    private int _animationDieHash = Animator.StringToHash("Die");
     private InputHandler _inputHandler;
     private bool _alive = true;
     private Animator _animator;
@@ -18,7 +17,9 @@ public class AnimationControl : MonoBehaviour
     private void Update()
     {
         if (_alive)
-            _animator.SetFloat(_animationSpeedName, _inputHandler.MoveDirection().magnitude);
+        {
+            _animator.SetFloat(_animationSpeedHash, _inputHandler.MoveDirection().magnitude);
+        }
     }
 
     public void Initialized(InputHandler inputHandler,Animator animator)
@@ -30,6 +31,6 @@ public class AnimationControl : MonoBehaviour
     public void Die()
     {
         _alive = false;
-        _animator.SetBool(_animationDieName,true);
+        _animator.SetBool(_animationDieHash,true);
     }
 }

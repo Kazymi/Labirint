@@ -14,7 +14,10 @@ public class PlayerStatistics : MonoBehaviour
     private void Awake()
     {
         _photonView = GetComponent<PhotonView>();
-        if(_photonView.IsMine == false) Destroy(this);
+        if (_photonView.IsMine == false)
+        {
+            Destroy(this);
+        }
     }
 
     private void Start()
@@ -28,13 +31,17 @@ public class PlayerStatistics : MonoBehaviour
     private void OnEnable()
     {
         if (_photonView.IsMine)
+        {
             ServiceLocator.Subscribe<PlayerStatistics>(this);
+        }
     }
 
     private void OnDisable()
     {
         if (_photonView.IsMine)
+        {
             ServiceLocator.Unsubscribe<PlayerStatistics>();
+        }
     }
 
     public void AddFoundKey()
@@ -46,7 +53,7 @@ public class PlayerStatistics : MonoBehaviour
         _gameStatisticMenu.UpdateKeySlider(_foundedKeys / _needToFindKeys);
         if (_foundedKeys >= _needToFindKeys)
         {
-            object[] content = new object[]{_photonView.Controller.NickName};
+            object[] content = new object[] {_photonView.Controller.NickName};
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
             PhotonNetwork.RaiseEvent((int) EventType.PlayerFindAllKeys, content, raiseEventOptions,
                 SendOptions.SendReliable);

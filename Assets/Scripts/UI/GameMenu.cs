@@ -49,7 +49,10 @@ public class GameMenu : MonoBehaviour,IOnEventCallback
 
     public void OnEvent(EventData photonEvent)
     {
-        if(photonEvent.Code != (int) EventType.PlayerFindAllKeys) return;
+        if (photonEvent.Code != (int) EventType.PlayerFindAllKeys)
+        {
+            return;
+        }
         object[] data = (object[])photonEvent.CustomData;
         _finishedGame = true;
         gameCanvas.enabled = false;
@@ -61,7 +64,10 @@ public class GameMenu : MonoBehaviour,IOnEventCallback
 
     public void Paused()
     {
-        if(_finishedGame) return;
+        if (_finishedGame)
+        {
+            return;
+        }
         _paused = !_paused;
         gameCanvas.enabled = !_paused;
         pausedCanvas.enabled = _paused;

@@ -40,7 +40,10 @@ public class LauncherMenu : MonoBehaviour
 
     private void CreateRoom()
     {
-        if(string.IsNullOrEmpty(roomNameInputField.text)) return;
+        if (string.IsNullOrEmpty(roomNameInputField.text))
+        {
+            return;
+        }
         launcher.CreateRoom(roomNameInputField.text);
         Load();
     }

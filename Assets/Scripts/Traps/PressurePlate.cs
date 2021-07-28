@@ -2,7 +2,7 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-public class PressurePlate : MonoBehaviourPunCallbacks,ITrapSetting
+public class PressurePlate : MonoBehaviourPunCallbacks, ITrapSetting
 {
     [SerializeField] private float timerCooldown;
     [SerializeField] private float timerAction;
@@ -11,7 +11,7 @@ public class PressurePlate : MonoBehaviourPunCallbacks,ITrapSetting
     private bool _activated;
     private const string animationNameOpen = "Open";
     private const string animationNameClose = "Close";
-    
+
     public PhotonView PhotonView { get; set; }
 
     private void Awake()
@@ -22,15 +22,27 @@ public class PressurePlate : MonoBehaviourPunCallbacks,ITrapSetting
 
     private void OnTriggerEnter(Collider other)
     {
-        if(_activated) return;
+        if (_activated)
+        {
+            return;
+        }
+
         var i = other.GetComponent<PlayerHealth>();
-        if (i == false) return;
+        if (i == false)
+        {
+            return;
+        }
+
         StartAction(i);
     }
 
     public void StartAction()
     {
-        if(_activated) return;
+        if (_activated)
+        {
+            return;
+        }
+
         photonView.RPC("Disable", RpcTarget.All);
     }
 
@@ -43,7 +55,7 @@ public class PressurePlate : MonoBehaviourPunCallbacks,ITrapSetting
     [PunRPC]
     public void Disable()
     {
-        _animator.Play(animationNameOpen,0,0);
+        _animator.Play(animationNameOpen, 0, 0);
         StartCoroutine(Activate());
     }
 
@@ -58,11 +70,11 @@ public class PressurePlate : MonoBehaviourPunCallbacks,ITrapSetting
     {
         _activated = true;
         yield return new WaitForSeconds(timerAction);
-        _animator.Play(animationNameClose,0,0);
+        _animator.Play(animationNameClose, 0, 0);
         yield return new WaitForSeconds(timerCooldown - timerAction);
         photonView.RPC("Enable", RpcTarget.All);
     }
-    
+
     private void StartAction(PlayerHealth playerHealth)
     {
         playerHealth.Death();

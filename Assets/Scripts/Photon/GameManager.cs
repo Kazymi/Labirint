@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] private int needToFindKeys = 3;
 
-    private PhotonView _photonView;
     private bool _gameFineshed;
     public int NeedToFindKeys => needToFindKeys;
 
@@ -26,15 +25,19 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    private void Start()
-    {
-        _photonView = GetComponent<PhotonView>();
-    }
-
     public void OnEvent(EventData photonEvent)
     {
+        if (_gameFineshed)
+        {
+            return;
+        }
+        
         var eventCode = photonEvent.Code;
-        if (eventCode != (int) EventType.PlayerFindAllKeys) return;
+        
+        if (eventCode != (int) EventType.PlayerFindAllKeys)
+        {
+            return;
+        }
         PlayerWin();
     }
     

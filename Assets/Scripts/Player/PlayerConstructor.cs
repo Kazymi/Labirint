@@ -11,7 +11,7 @@ public class PlayerConstructor : MonoBehaviour
     
     private PlayerPunch _playerPunch;
     private AnimationControl _animationControl;
-    private Movenment _movenment;
+    private Movement _movement;
     public PlayerPunch PlayerPunch => _playerPunch;
 
     private void Start()
@@ -23,10 +23,10 @@ public class PlayerConstructor : MonoBehaviour
         {
             _animationControl = gameObject.AddComponent<AnimationControl>();
             _animationControl.Initialized(inputHandler,animator);
-            _movenment = gameObject.AddComponent<Movenment>();
-            _movenment.Initialize(inputHandler,rotateTransform);
+            _movement = gameObject.AddComponent<Movement>();
+            _movement.Initialize(inputHandler,rotateTransform);
             gameObject.AddComponent<PlayerTrigger>();
-            gameObject.AddComponent<PlayerHealth>().Initialize(_movenment,_animationControl);
+            gameObject.AddComponent<PlayerHealth>().Initialize(_movement,_animationControl);
         } else Destroy(camera);
     }
 }

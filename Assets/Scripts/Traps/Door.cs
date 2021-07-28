@@ -26,7 +26,10 @@ public class Door : MonoBehaviourPunCallbacks,ITrapSetting
 
    public void StartAction()
    {
-      if(_opened) return;
+      if (_opened)
+      {
+         return;
+      }
       PhotonView.RPC("Disable", RpcTarget.All);
    }
 

@@ -7,7 +7,10 @@ public class TrapTrigger : MonoBehaviourPunCallbacks
     private void OnTriggerEnter(Collider other)
     {
         var i = other.GetComponent<PlayerHealth>();
-        if (i == false) return;
+        if (i == false)
+        {
+            return;
+        }
         i.Death();
     }
 }

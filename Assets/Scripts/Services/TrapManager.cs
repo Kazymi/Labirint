@@ -9,7 +9,10 @@ public class TrapManager : MonoBehaviour
     private Dictionary<TrapType, FactoryPhoton> _factories = new Dictionary<TrapType, FactoryPhoton>();
     private void Start()
     {
-        if(PhotonNetwork.IsMasterClient == false) return;
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            return;
+        }
         
         foreach (var trap in trapConfigurations)
         {

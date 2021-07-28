@@ -2,7 +2,7 @@ using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class Movenment : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     [SerializeField] private float speed = 3f;
     [SerializeField] private float jumpForce = 6f;
@@ -38,7 +38,10 @@ public class Movenment : MonoBehaviour
 
     private void Update()
     {
-        if (_paused) return;
+        if (_paused)
+        {
+            return;
+        }
         _isGround = _control.isGrounded;
         Move();
     }

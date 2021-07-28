@@ -48,7 +48,9 @@ public class PlayerPunch : MonoBehaviour
     {
         _impact = new Vector3(_impact.x, 0, _impact.z);
         if (_impact.magnitude > 0.2) character.Move(_impact * Time.deltaTime);
-        _impact = Vector3.Lerp(_impact, Vector3.zero, 5 * Time.deltaTime);
+        {
+            _impact = Vector3.Lerp(_impact, Vector3.zero, 5 * Time.deltaTime);
+        }
     }
 
     public void Punch()
@@ -69,6 +71,8 @@ public class PlayerPunch : MonoBehaviour
     {
         var dir = (transform.position - point).normalized;
         if (dir.y < 0) dir.y = -dir.y;
-        _impact += dir.normalized * kickStrength;
+        {
+            _impact += dir.normalized * kickStrength;
+        }
     }
 }

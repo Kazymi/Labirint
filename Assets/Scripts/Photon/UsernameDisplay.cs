@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class UsernameDisplay : MonoBehaviour
 {
-	[SerializeField] PhotonView playerPV;
-	[SerializeField] TMP_Text text;
+    [SerializeField] PhotonView playerPV;
+    [SerializeField] TMP_Text text;
 
-	void Start()
-	{
-		if(playerPV.IsMine)
-		{
-			gameObject.SetActive(false);
-		}
+    void Start()
+    {
+        if (playerPV.IsMine)
+        {
+            gameObject.SetActive(false);
+        }
 
-		text.text = playerPV.Owner.NickName;
-	}
+        text.text = playerPV.Owner.NickName;
+    }
 }

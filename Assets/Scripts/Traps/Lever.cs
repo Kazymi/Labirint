@@ -50,7 +50,10 @@ public class Lever : MonoBehaviourPunCallbacks, ITrapSetting
     [PunRPC]
     public void Enable()
     {
-        if (_activated || _photonView.IsMine == false) return;
+        if (_activated || _photonView.IsMine == false)
+        {
+            return;
+        }
         _animator.Play(_animationDownName, 0, 0);
         var idCurrentActivator = Random.Range(0, _listActivators.Count);
         _photonView.RPC(RPCEventType.ActivateTrap,RpcTarget.All,idCurrentActivator);
