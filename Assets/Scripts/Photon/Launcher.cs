@@ -10,15 +10,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject playerListItemPrefab;
     [SerializeField] GameObject startGameButton;
-
-    // TODO: singleton
+    
     private LauncherMenu _launcherMenu;
 
-    public static Launcher Instance;
-
-    private void Awake()
+    public override void OnEnable()
     {
-        Instance = this;
+        base.OnEnable();
+        ServiceLocator.Subscribe<Launcher>(this);
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        ServiceLocator.Unsubscribe<Launcher>();
     }
 
     private void Start()

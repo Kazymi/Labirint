@@ -9,9 +9,9 @@ public class RoomListItem : MonoBehaviour
 	private Launcher _launcher;
 	private RoomInfo _info;
 	
-	private void Awake()
+	private void Start()
 	{
-		_launcher = Launcher.Instance;
+		_launcher = ServiceLocator.GetService<Launcher>();
 	}
 
 	public void SetUp(RoomInfo _info)
